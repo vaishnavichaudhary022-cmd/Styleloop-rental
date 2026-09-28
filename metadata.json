@@ -1,0 +1,6 @@
+{
+  "name": "REVOGUE Rentals - Designer Dress Rental Mobile App",
+  "description": "A modern dress rental mobile app UI/UX mockup inspired by Myntra and Savana with vibrant promotional banners, curated categories, and trending rentals grid.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
