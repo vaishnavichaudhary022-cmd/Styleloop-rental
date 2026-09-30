@@ -32,6 +32,7 @@ interface CartDrawerProps {
   currentAddressId: string;
   onSelectAddress: (addressId: string) => void;
   onAddAddress: (newAddr: Omit<Address, 'id'>) => void;
+  onViewRentalHistory?: () => void;
 }
 
 export const CartDrawer: React.FC<CartDrawerProps> = ({
@@ -44,6 +45,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   currentAddressId,
   onSelectAddress,
   onAddAddress,
+  onViewRentalHistory,
 }) => {
   // Steps in checkout:
   // 'cart' -> review items & calculate total
@@ -63,10 +65,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   const [newFullName, setNewFullName] = useState('');
   const [newPhone, setNewPhone] = useState('');
   const [newStreet, setNewStreet] = useState('');
-  const [newApartment, setNewApartment] = useState('');
-  const [newCity, setNewCity] = useState('Mumbai');
+  const [newApartment, setNewApartment] = useState('College Road');
+  const [newCity, setNewCity] = useState('Nashik');
   const [newState, setNewState] = useState('Maharashtra');
-  const [newPincode, setNewPincode] = useState('');
+  const [newPincode, setNewPincode] = useState('422005');
   const [newType, setNewType] = useState<'Home' | 'Work' | 'Event Venue'>('Home');
 
   // Payment states
@@ -82,6 +84,15 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
     address: Address;
     totalAmount: number;
     securityDeposit: number;
+    estimatedDeliveryDate: string;
+    estimatedDeliveryTime: string;
+    eventDate: string;
+    returnDate: string;
+    firstItemName: string;
+    firstItemBrand: string;
+    firstItemImage?: string;
+    firstItemSize: string;
+    firstItemDuration: number;
   } | null>(null);
 
   if (!isOpen) return null;
@@ -162,11 +173,38 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
     setIsProcessingPayment(true);
     setTimeout(() => {
       setIsProcessingPayment(false);
+      const firstItem = cartItems[0];
+      const itemStartDate = new Date(firstItem?.startDate || Date.now());
+      const itemDeliveryDate = new Date(itemStartDate.getTime() - 1 * 24 * 3600 * 1000);
+      const itemReturnDate = new Date(itemStartDate.getTime() + (firstItem?.rentalDuration || 4) * 24 * 3600 * 1000);
+
       const bookingData = {
-        bookingId: `RVG-${Math.floor(100000 + Math.random() * 900000)}`,
+        bookingId: `RVG-NSK-2024-${Math.floor(1000 + Math.random() * 9000)}`,
         address: activeAddress,
         totalAmount: grandTotal,
         securityDeposit: securityDeposit,
+        estimatedDeliveryDate: itemDeliveryDate.toLocaleDateString('en-IN', {
+          weekday: 'long',
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+        }),
+        estimatedDeliveryTime: '1:30 PM',
+        eventDate: itemStartDate.toLocaleDateString('en-IN', {
+          weekday: 'short',
+          month: 'short',
+          day: 'numeric',
+        }),
+        returnDate: itemReturnDate.toLocaleDateString('en-IN', {
+          weekday: 'long',
+          month: 'short',
+          day: 'numeric',
+        }),
+        firstItemName: firstItem?.product.name || 'Designer Couture Dress',
+        firstItemBrand: firstItem?.product.brand || 'REVOGUE Couture',
+        firstItemImage: firstItem?.product.image,
+        firstItemSize: firstItem?.selectedSize || 'M',
+        firstItemDuration: firstItem?.rentalDuration || 4,
       };
       setConfirmedBookingData(bookingData);
       setCurrentStep('success');
@@ -283,8 +321,28 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
                         <div className="mt-1 flex items-center gap-1 text-[10px] text-neutral-500">
                           <Calendar className="w-3 h-3 text-rose-500" />
-                          <span>Rental Start: <strong>{item.startDate}</strong></span>
+                          <span>Event Date: <strong>{item.startDate}</strong></span>
                         </div>
+
+                        {/* Delivery Arrival Estimation */}
+                        {(() => {
+                          const sDate = new Date(item.startDate || Date.now());
+                          const dDate = new Date(sDate.getTime() - 1 * 24 * 3600 * 1000);
+                          const rDate = new Date(sDate.getTime() + item.rentalDuration * 24 * 3600 * 1000);
+                          const fmtDelivery = dDate.toLocaleDateString('en-IN', { weekday: 'short', month: 'short', day: 'numeric' });
+                          const fmtReturn = rDate.toLocaleDateString('en-IN', { weekday: 'short', month: 'short', day: 'numeric' });
+                          return (
+                            <div className="mt-1.5 p-2 rounded-xl bg-amber-50/90 border border-amber-200/80 text-[10px] space-y-0.5">
+                              <div className="flex items-center gap-1.5 font-bold text-amber-950">
+                                <Truck className="w-3 h-3 text-rose-600 shrink-0" />
+                                <span>Delivered by: {fmtDelivery} by 1:30 PM</span>
+                              </div>
+                              <p className="text-[9.5px] text-neutral-600">
+                                Arrives 1 day before event for trial fitting · Pickup on {fmtReturn}
+                              </p>
+                            </div>
+                          );
+                        })()}
                       </div>
 
                       {/* Explicit Item Price Math */}
@@ -546,7 +604,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                     </label>
                     <input
                       type="text"
-                      placeholder="e.g. Bandra West, Near Carter Road"
+                      placeholder="e.g. College Road / Gangapur Road"
                       value={newApartment}
                       onChange={(e) => setNewApartment(e.target.value)}
                       className="w-full p-2.5 border rounded-xl bg-neutral-50 text-xs focus:outline-none focus:border-rose-500"
@@ -558,7 +616,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                       <label className="text-[11px] font-bold text-neutral-700 block mb-1">City *</label>
                       <input
                         type="text"
-                        placeholder="Mumbai"
+                        placeholder="Nashik"
                         value={newCity}
                         onChange={(e) => setNewCity(e.target.value)}
                         required
@@ -848,16 +906,72 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 </div>
               </div>
 
+              {/* HIGHLIGHTED DELIVERY ARRIVAL SCHEDULE CARD */}
+              <div className="bg-gradient-to-br from-amber-500/15 via-rose-500/10 to-amber-50 rounded-3xl p-4 sm:p-5 border-2 border-amber-300 space-y-3 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="p-2 rounded-xl bg-rose-600 text-white shadow-xs">
+                      <Truck className="w-5 h-5 animate-pulse" />
+                    </span>
+                    <div>
+                      <span className="text-[10px] font-extrabold uppercase tracking-wider text-rose-700 block">
+                        Estimated Delivery Arrival
+                      </span>
+                      <h4 className="text-base sm:text-lg font-black text-neutral-900 font-brand">
+                        {confirmedBookingData.estimatedDeliveryDate}
+                      </h4>
+                    </div>
+                  </div>
+                  <span className="text-xs font-black px-2.5 py-1 rounded-full bg-amber-400 text-amber-950 shadow-2xs">
+                    By {confirmedBookingData.estimatedDeliveryTime}
+                  </span>
+                </div>
+
+                <div className="p-3 bg-white/90 rounded-2xl border border-amber-200/80 text-xs space-y-1.5">
+                  <p className="text-neutral-800 font-bold flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                    <span>Ready 1 Day Prior to Event ({confirmedBookingData.eventDate})</span>
+                  </p>
+                  <p className="text-neutral-600 text-[11px] leading-relaxed">
+                    Our courier rider will deliver your sterilized outfit with a <strong>complimentary backup size</strong> directly to:
+                  </p>
+                  <p className="font-semibold text-neutral-900 text-[11px] bg-neutral-50 p-2 rounded-xl border border-neutral-200">
+                    📍 {confirmedBookingData.address.street}, {confirmedBookingData.address.apartment || 'Nashik'}, {confirmedBookingData.address.city} - {confirmedBookingData.address.pincode}
+                  </p>
+                </div>
+
+                {/* 5-Step Progress Timeline */}
+                <div className="space-y-1 pt-1">
+                  <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-wider block">
+                    Live Courier Status
+                  </span>
+                  <div className="grid grid-cols-4 gap-1 text-center text-[10px]">
+                    <div className="p-1.5 rounded-lg bg-emerald-100 text-emerald-800 font-bold border border-emerald-300">
+                      ✓ Booked
+                    </div>
+                    <div className="p-1.5 rounded-lg bg-amber-100 text-amber-900 font-bold border border-amber-300 animate-pulse">
+                      Tailor Press
+                    </div>
+                    <div className="p-1.5 rounded-lg bg-white/80 text-neutral-600 font-medium border border-neutral-200">
+                      Delivery ({confirmedBookingData.estimatedDeliveryDate.split(',')[0]})
+                    </div>
+                    <div className="p-1.5 rounded-lg bg-white/80 text-neutral-600 font-medium border border-neutral-200">
+                      Pickup ({confirmedBookingData.returnDate.split(',')[0]})
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               {/* Delivery Destination Card */}
-              <div className="bg-neutral-50 p-4 rounded-2xl border border-neutral-200 space-y-2 text-xs">
-                <div className="flex items-center gap-2 text-rose-600 font-bold uppercase tracking-wider text-[11px]">
-                  <Truck className="w-4 h-4" /> Scheduled Doorstep Delivery
+              <div className="bg-neutral-50 p-3.5 rounded-2xl border border-neutral-200 space-y-1.5 text-xs">
+                <div className="flex items-center justify-between text-[11px] text-neutral-500">
+                  <span className="font-bold text-neutral-800 uppercase">Contact & Courier Info</span>
+                  <span className="text-rose-600 font-bold">Nashik Central Hub</span>
                 </div>
                 <div>
                   <strong className="text-neutral-900 block">{confirmedBookingData.address.fullName} ({confirmedBookingData.address.phone})</strong>
-                  <p className="text-neutral-600 mt-0.5">
-                    {confirmedBookingData.address.street}
-                    {confirmedBookingData.address.apartment && `, ${confirmedBookingData.address.apartment}`}, {confirmedBookingData.address.city}, {confirmedBookingData.address.state} - {confirmedBookingData.address.pincode}
+                  <p className="text-[11px] text-neutral-500 mt-0.5">
+                    Rider Akash Deshmukh (+91 94239 88120) assigned for doorstep trial & fitting.
                   </p>
                 </div>
               </div>
@@ -865,42 +979,42 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               {/* Payment Summary */}
               <div className="bg-emerald-50/70 p-4 rounded-2xl border border-emerald-200/80 space-y-1.5 text-xs text-emerald-900">
                 <div className="flex justify-between font-bold">
-                  <span>Total Paid</span>
+                  <span>Total Paid (Rental + Deposit)</span>
                   <span className="font-brand text-sm">₹{confirmedBookingData.totalAmount.toLocaleString('en-IN')}</span>
                 </div>
                 <div className="flex justify-between text-[11px] text-emerald-700">
-                  <span>Refundable Deposit (Safe Escrow)</span>
+                  <span>Refundable Security Deposit</span>
                   <span>₹{confirmedBookingData.securityDeposit.toLocaleString('en-IN')}</span>
                 </div>
                 <div className="text-[10px] text-emerald-600 pt-1 border-t border-emerald-200">
-                  Deposit is automatically refunded within 24 hours of reverse pickup.
+                  Deposit of ₹{confirmedBookingData.securityDeposit} will be automatically refunded to your UPI account within 2 hours of reverse pickup on {confirmedBookingData.returnDate}.
                 </div>
               </div>
 
-              {/* Next Steps */}
-              <div className="p-3 bg-neutral-50 rounded-xl border text-xs text-neutral-600 space-y-1.5">
-                <div className="font-bold text-neutral-800">What Happens Next?</div>
-                <div className="flex items-center gap-2">
-                  <Check className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>Our master tailor will press & steam-sanitize your garment.</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Check className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>Courier will arrive with altered backup size 24 hours prior to event.</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <RotateCcw className="w-3.5 h-3.5 text-rose-500" />
-                  <span>Reverse pickup arranged automatically from your address.</span>
-                </div>
-              </div>
+              {/* Action Buttons: Track in My Rentals or Continue */}
+              <div className="space-y-2 pt-1">
+                {onViewRentalHistory && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      onViewRentalHistory();
+                    }}
+                    className="w-full py-3.5 bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-700 hover:to-pink-700 text-white rounded-2xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-rose-500/25 transition active:scale-95"
+                  >
+                    <Truck className="w-4 h-4" />
+                    <span>Track Delivery Live in My Rentals</span>
+                  </button>
+                )}
 
-              <button
-                type="button"
-                onClick={onClose}
-                className="w-full py-3 bg-neutral-900 text-white rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-neutral-800 transition"
-              >
-                Done & Return to Wardrobe
-              </button>
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="w-full py-2.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 rounded-2xl text-xs font-bold transition"
+                >
+                  Done & Return to Storefront
+                </button>
+              </div>
             </div>
           )}
         </div>

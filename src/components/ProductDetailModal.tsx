@@ -9,6 +9,7 @@ interface ProductDetailModalProps {
   isWishlisted: boolean;
   onToggleWishlist: (product: DressProduct) => void;
   onAddToCart: (product: DressProduct, size: string, duration: RentalDuration, startDate: string) => void;
+  onRentNow?: (product: DressProduct, size: string, duration: RentalDuration, startDate: string) => void;
 }
 
 export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
@@ -18,6 +19,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
   isWishlisted,
   onToggleWishlist,
   onAddToCart,
+  onRentNow,
 }) => {
   if (!isOpen || !product) return null;
 
@@ -38,13 +40,43 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
   const activeRentalPrice = Math.round(product.rentalPrice * durationMultiplier[selectedDuration]);
   const savings = product.retailPrice - activeRentalPrice;
 
-  const handleBook = () => {
+  // Delivery date calculations (arrives 1 day before selected event startDate for trial fitting)
+  const eventDateObj = new Date(startDate || Date.now());
+  const deliveryDateObj = new Date(eventDateObj.getTime() - 1 * 24 * 3600 * 1000);
+  const returnDateObj = new Date(eventDateObj.getTime() + selectedDuration * 24 * 3600 * 1000);
+
+  const formattedDeliveryDate = deliveryDateObj.toLocaleDateString('en-IN', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+  });
+  const formattedEventDate = eventDateObj.toLocaleDateString('en-IN', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+  });
+  const formattedReturnDate = returnDateObj.toLocaleDateString('en-IN', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+  });
+
+  const handleAddToCartOnly = () => {
     onAddToCart(product, selectedSize, selectedDuration, startDate);
     setAddedToast(true);
     setTimeout(() => {
       setAddedToast(false);
       onClose();
     }, 1200);
+  };
+
+  const handleInstantRent = () => {
+    if (onRentNow) {
+      onRentNow(product, selectedSize, selectedDuration, startDate);
+      onClose();
+    } else {
+      handleAddToCartOnly();
+    }
   };
 
   return (
@@ -173,7 +205,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
           {/* Delivery Date Picker */}
           <div>
             <label className="block text-xs font-bold text-neutral-800 mb-1">
-              Select Delivery Date
+              Select Event / Function Date
             </label>
             <div className="flex items-center gap-2">
               <input
@@ -185,8 +217,46 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               />
             </div>
             <p className="text-[10px] text-neutral-400 mt-1">
-              We recommend setting delivery 1 day before your event date.
+              Select the day of your event. We deliver 1 day prior for your doorstep trial.
             </p>
+          </div>
+
+          {/* Prominent Estimated Delivery Date & Time Box */}
+          <div className="bg-amber-50/90 border border-amber-300/80 rounded-2xl p-3.5 space-y-2 shadow-2xs">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-extrabold text-amber-950 uppercase tracking-wide flex items-center gap-1.5">
+                <Truck className="w-4 h-4 text-rose-600" />
+                <span>Estimated Doorstep Delivery</span>
+              </span>
+              <span className="text-[9.5px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-rose-100 text-rose-700">
+                Nashik Fleet 📍
+              </span>
+            </div>
+
+            <div className="bg-white p-3 rounded-xl border border-amber-200/80 flex items-center justify-between gap-3">
+              <div>
+                <span className="text-[10px] text-neutral-400 font-bold uppercase block">
+                  Arrives By Courier
+                </span>
+                <span className="text-sm font-black text-neutral-900 block font-brand">
+                  {formattedDeliveryDate} by 1:30 PM
+                </span>
+                <span className="text-[10.5px] text-emerald-700 font-semibold block mt-0.5">
+                  ✓ Ready for fitting 1 day before event ({formattedEventDate})
+                </span>
+              </div>
+              <div className="text-right shrink-0 border-l border-neutral-100 pl-3">
+                <span className="text-[10px] text-neutral-400 font-bold uppercase block">
+                  Reverse Pickup
+                </span>
+                <span className="text-xs font-bold text-neutral-800 block">
+                  {formattedReturnDate}
+                </span>
+                <span className="text-[10px] text-neutral-400 block">
+                  by 11:00 AM
+                </span>
+              </div>
+            </div>
           </div>
 
           {/* Size Selector */}
@@ -242,28 +312,41 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
         </div>
 
         {/* Sticky Action Footer */}
-        <div className="sticky bottom-0 z-20 bg-white border-t border-neutral-200 p-3 flex items-center gap-2.5">
-          <div className="flex-1">
-            <span className="text-[10px] text-neutral-400 block font-medium">Total Rental Fee</span>
-            <span className="text-lg font-black text-neutral-900 font-brand">
-              ₹{activeRentalPrice.toLocaleString('en-IN')}
+        <div className="sticky bottom-0 z-20 bg-white border-t border-neutral-200 p-3 sm:p-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+          <div className="flex items-center justify-between sm:block sm:w-auto">
+            <div>
+              <span className="text-[10px] text-neutral-400 block font-medium">Rental Total</span>
+              <span className="text-lg sm:text-xl font-black text-neutral-900 font-brand">
+                ₹{activeRentalPrice.toLocaleString('en-IN')}
+              </span>
+            </div>
+            <span className="text-[10px] font-bold text-amber-900 bg-amber-100/90 px-2 py-0.5 rounded-full border border-amber-300 sm:hidden">
+              🚚 Arrives {formattedDeliveryDate}
             </span>
           </div>
 
-          <button
-            onClick={handleBook}
-            className="flex-1 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white py-3 px-4 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-md shadow-rose-500/25 transition active:scale-95"
-          >
-            {addedToast ? (
-              <>
-                <Check className="w-4 h-4 stroke-[3]" /> Added to Bag
-              </>
-            ) : (
-              <>
-                Rent This Dress <ArrowRight className="w-3.5 h-3.5" />
-              </>
-            )}
-          </button>
+          <div className="flex items-center gap-2 flex-1">
+            <button
+              onClick={handleAddToCartOnly}
+              className="flex-1 py-3 px-3 rounded-xl border border-neutral-300 hover:border-neutral-400 text-neutral-800 text-xs font-bold uppercase tracking-wider transition hover:bg-neutral-50 flex items-center justify-center gap-1.5"
+            >
+              {addedToast ? (
+                <>
+                  <Check className="w-4 h-4 text-emerald-600 stroke-[3]" /> Added to Bag
+                </>
+              ) : (
+                'Add to Bag'
+              )}
+            </button>
+
+            <button
+              onClick={handleInstantRent}
+              className="flex-1 bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-700 hover:to-pink-700 text-white py-3 px-4 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-md shadow-rose-500/25 transition active:scale-95"
+            >
+              <Truck className="w-3.5 h-3.5" />
+              <span>Rent Now · Delivers {formattedDeliveryDate}</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import React from 'react';
-import { ShieldCheck, Sparkles, Truck, RotateCcw, Heart, Store, Shield } from 'lucide-react';
+import { ShieldCheck, Sparkles, Truck, RotateCcw, Heart, Store, Shield, MapPin } from 'lucide-react';
 import { CategoryId, TargetGender } from '../types/rental';
+import { Logo } from './Logo';
 
 interface FooterProps {
   onSelectGender: (g: TargetGender) => void;
@@ -14,7 +15,7 @@ export const Footer: React.FC<FooterProps> = ({
   onOpenPortal,
 }) => {
   return (
-    <footer className="bg-neutral-900 text-neutral-300 pt-12 pb-8 border-t border-neutral-800">
+    <footer className="bg-neutral-950 text-neutral-300 pt-12 pb-8 border-t border-neutral-800">
       {/* Value Props Strip */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10 border-b border-neutral-800 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-xs">
         <div className="flex items-start gap-3">
@@ -33,7 +34,7 @@ export const Footer: React.FC<FooterProps> = ({
           </div>
           <div>
             <h4 className="font-bold text-white text-sm">100% Refundable Deposit</h4>
-            <p className="text-neutral-400 mt-1">Security deposits are held safely in escrow and automatically returned within 24 hours.</p>
+            <p className="text-neutral-400 mt-1">Security deposits are held safely in escrow and automatically returned within 2 hours of return.</p>
           </div>
         </div>
 
@@ -42,8 +43,8 @@ export const Footer: React.FC<FooterProps> = ({
             <Truck className="w-5 h-5" />
           </div>
           <div>
-            <h4 className="font-bold text-white text-sm">Free Delivery & Reverse Pickup</h4>
-            <p className="text-neutral-400 mt-1">Hassle-free doorstep drop off 1 day before your event and scheduled courier pickup.</p>
+            <h4 className="font-bold text-white text-sm">Doorstep Delivery in Nashik</h4>
+            <p className="text-neutral-400 mt-1">Express 2-3 hour sanitized delivery across College Rd, Gangapur Rd, Indira Nagar & beyond.</p>
           </div>
         </div>
 
@@ -62,18 +63,18 @@ export const Footer: React.FC<FooterProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid grid-cols-2 md:grid-cols-5 gap-8 text-xs">
         {/* Brand Column */}
         <div className="col-span-2 space-y-3">
-          <div className="flex items-center gap-1">
-            <span className="font-brand font-black text-2xl text-white tracking-tight">
-              REVOGUE
-            </span>
-            <span className="w-2 h-2 rounded-full bg-rose-500 mb-2"></span>
-          </div>
+          <Logo variant="footer" />
           <p className="text-neutral-400 text-xs leading-relaxed max-w-sm">
-            India's foremost designer wardrobe and festival costume rental platform. Wear luxury labels for weddings, Navratri garba, Diwali parties, black-tie events and kids annual day functions.
+            Nashik's foremost designer wardrobe and festival costume rental platform. Wear luxury labels for weddings, Navratri garba, Diwali parties, black-tie galas, and school fancy dress functions.
           </p>
-          <div className="flex items-center gap-3 pt-2 text-neutral-400 text-xs">
-            <span>Express Delivery in:</span>
-            <span className="font-semibold text-white">Mumbai · Delhi NCR · Bangalore · Ahmedabad · Pune</span>
+          <div className="pt-2 text-neutral-400 text-xs space-y-1">
+            <div className="flex items-center gap-1.5 font-bold text-rose-400">
+              <MapPin className="w-3.5 h-3.5" />
+              <span>Exclusively Delivering across Nashik, Maharashtra:</span>
+            </div>
+            <p className="text-neutral-300 font-medium">
+              College Road · Gangapur Road · Mahatma Nagar · Indira Nagar · Govind Nagar · Panchavati · CIDCO · Nashik Road · Deolali
+            </p>
           </div>
         </div>
 

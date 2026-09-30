@@ -95,4 +95,72 @@ export interface WishlistItem {
   addedAt: string;
 }
 
+export interface NashikLocality {
+  id: string;
+  name: string;
+  pincode: string;
+  hub: string;
+  deliveryTime: string;
+  popularLandmarks: string[];
+}
+
+export type RentalOrderStatus =
+  | 'booked'
+  | 'dry_cleaned'
+  | 'dispatched'
+  | 'out_for_delivery'
+  | 'with_customer'
+  | 'pickup_scheduled'
+  | 'returned_inspected'
+  | 'completed'
+  | 'cancelled';
+
+export interface RentalOrderTimelineStep {
+  title: string;
+  desc: string;
+  date: string;
+  time?: string;
+  done: boolean;
+  current?: boolean;
+}
+
+export interface RentalOrder {
+  id: string;
+  bookingId: string;
+  product: DressProduct;
+  selectedSize: string;
+  backupSize?: string;
+  rentalDuration: RentalDuration;
+  startDate: string;
+  endDate: string;
+  bookingDate: string;
+  estimatedDeliveryDate?: string;
+  estimatedDeliveryTime?: string;
+  deliveryAddress: Address;
+  nashikLocality: string;
+  rentalFee: number;
+  securityDeposit: number;
+  deliveryFee: number;
+  discountApplied: number;
+  totalPaid: number;
+  depositStatus: 'held' | 'refund_initiated' | 'refunded' | 'adjusted';
+  depositRefundUpi?: string;
+  depositRefundTxn?: string;
+  refundDate?: string;
+  status: RentalOrderStatus;
+  statusLabel: string;
+  currentStep: number;
+  steps: RentalOrderTimelineStep[];
+  courierName: string;
+  courierTrackingNo: string;
+  courierContact?: string;
+  riderName?: string;
+  occasion?: string;
+  canExtend?: boolean;
+  canCancel?: boolean;
+  canReview?: boolean;
+  invoiceNumber: string;
+}
+
 export type ActiveTab = 'home' | 'categories' | 'orders' | 'wishlist' | 'profile' | 'shop_portal' | 'admin_portal';
+

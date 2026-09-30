@@ -18,16 +18,24 @@ import { ShopOwnerPortal } from './components/ShopOwnerPortal';
 import { AdminPortal } from './components/AdminPortal';
 import { Footer } from './components/Footer';
 import { LoginPage } from './components/LoginPage';
+import { RentalHistoryModal } from './components/RentalHistoryModal';
+import { JavaBackendModal } from './components/JavaBackendModal';
+import { OrdersView } from './components/OrdersView';
+import { CategoriesView } from './components/CategoriesView';
+import { ProfileView } from './components/ProfileView';
+import { BottomNavBar } from './components/BottomNavBar';
+import { DeliveryConfirmationModal } from './components/DeliveryConfirmationModal';
 
-import { DRESS_PRODUCTS, DEMO_USERS, INITIAL_ADDRESSES } from './data/rentalData';
-import { CategoryId, DressProduct, CartItem, TargetGender, User, Address, RentalDuration, Role } from './types/rental';
-import { Check, Sparkles, Heart, Store, Shield, User as UserIcon, LogOut } from 'lucide-react';
+import { DRESS_PRODUCTS, DEMO_USERS, INITIAL_ADDRESSES, SAMPLE_RENTAL_ORDERS } from './data/rentalData';
+import { CategoryId, DressProduct, CartItem, TargetGender, User, Address, RentalDuration, Role, RentalOrder, ActiveTab } from './types/rental';
+import { Check, Sparkles, Heart, Store, Shield, User as UserIcon, LogOut, Package } from 'lucide-react';
 
 export default function App() {
   // Authentication & Role state
   const [currentUser, setCurrentUser] = useState<User>(DEMO_USERS.customer);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [activePortal, setActivePortal] = useState<'customer' | 'shop' | 'admin'>('customer');
+  const [activeTab, setActiveTab] = useState<ActiveTab>('home');
   const [authModalOpen, setAuthModalOpen] = useState<boolean>(false);
   const [authInitialRole, setAuthInitialRole] = useState<Role>('customer');
 
@@ -35,6 +43,13 @@ export default function App() {
   const [addresses, setAddresses] = useState<Address[]>(INITIAL_ADDRESSES);
   const [currentAddressId, setCurrentAddressId] = useState<string>('addr-1');
   const [addressModalOpen, setAddressModalOpen] = useState<boolean>(false);
+
+  // Customer Rental Orders & History state
+  const [rentalOrders, setRentalOrders] = useState<RentalOrder[]>(SAMPLE_RENTAL_ORDERS);
+  const [rentalHistoryOpen, setRentalHistoryOpen] = useState<boolean>(false);
+  const [confirmedDeliveryOrder, setConfirmedDeliveryOrder] = useState<RentalOrder | null>(null);
+  const [deliveryConfirmationOpen, setDeliveryConfirmationOpen] = useState<boolean>(false);
+  const [javaBackendOpen, setJavaBackendOpen] = useState<boolean>(false);
 
   // Products state (can be added to by Shop Owners)
   const [productsList, setProductsList] = useState<DressProduct[]>(DRESS_PRODUCTS);
@@ -335,9 +350,23 @@ export default function App() {
         }}
         wishlistCount={wishlistIds.size}
         cartCount={cartItems.length}
+        activeRentalsCount={
+          rentalOrders.filter(
+            (o) =>
+              o.status === 'out_for_delivery' ||
+              o.status === 'with_customer' ||
+              o.status === 'dispatched'
+          ).length
+        }
         onOpenSearch={() => setSearchOpen(true)}
         onOpenWishlist={() => setWishlistOpen(true)}
         onOpenCart={() => setCartOpen(true)}
+        onOpenRentalHistory={() => {
+          setActivePortal('customer');
+          setActiveTab('orders');
+          setRentalHistoryOpen(true);
+        }}
+        onOpenJavaBackend={() => setJavaBackendOpen(true)}
         onOpenAddressModal={() => setAddressModalOpen(true)}
         onOpenAuthModal={() => {
           setAuthInitialRole(currentUser.role);
@@ -345,12 +374,14 @@ export default function App() {
         }}
         onLogoClick={() => {
           setActivePortal('customer');
+          setActiveTab('home');
           setSelectedCategory('all');
           setSelectedGender('all');
         }}
         onSelectCategory={(cat) => {
           setSelectedCategory(cat);
           setActivePortal('customer');
+          setActiveTab('home');
         }}
         onNavigatePortal={(p) => setActivePortal(p)}
         onLogout={() => {
@@ -359,41 +390,69 @@ export default function App() {
         }}
       />
 
-      {/* Main Body Content according to active portal */}
-      <main className="flex-1">
+      {/* Main Body Content according to active portal and tabs */}
+      <main className="flex-1 pb-16 md:pb-0">
         {activePortal === 'customer' && (
           <>
-            {/* Bold Promotional Hero Banner (with NO Savana word!) */}
-            <PromoBanner
-              onBannerClick={() => {
-                showToast('Coupon code RENT40 active! Flat 40% off applied.', 'sparkles');
-              }}
-              onCodeCopiedToast={(code) => {
-                showToast(`Coupon code ${code} copied to clipboard!`, 'check');
-              }}
-            />
+            {activeTab === 'home' && (
+              <>
+                {/* Bold Promotional Hero Banner */}
+                <PromoBanner
+                  onBannerClick={() => {
+                    showToast('Coupon code RENT40 active! Flat 40% off applied.', 'sparkles');
+                  }}
+                  onCodeCopiedToast={(code) => {
+                    showToast(`Coupon code ${code} copied to clipboard!`, 'check');
+                  }}
+                />
 
-            {/* Circular Category Row: Party, Wedding, Festive, Formal, Navratri, Diwali, Haldi, Fancy Dress */}
-            <CategoryRow
-              selectedCategory={selectedCategory}
-              onSelectCategory={(catId) => setSelectedCategory(catId)}
-            />
+                {/* Circular Category Row: Party, Wedding, Festive, Formal, Navratri, Diwali, Haldi, Fancy Dress */}
+                <CategoryRow
+                  selectedCategory={selectedCategory}
+                  onSelectCategory={(catId) => setSelectedCategory(catId)}
+                />
 
-            {/* Trending Rentals: Responsive Grid of Product Cards for Women, Men, Kids & Festivals */}
-            <TrendingRentalsGrid
-              products={displayedProducts}
-              wishlistIds={wishlistIds}
-              onToggleWishlist={handleToggleWishlist}
-              onSelectProduct={(product) => setSelectedProduct(product)}
-              selectedCategory={selectedCategory}
-              selectedGender={selectedGender}
-              sortOption={sortOption}
-              onSortChange={setSortOption}
-              filterUnder1500={filterUnder1500}
-              onToggleFilterUnder1500={() => setFilterUnder1500((prev) => !prev)}
-              filterFestivalOnly={filterFestivalOnly}
-              onToggleFilterFestivalOnly={() => setFilterFestivalOnly((prev) => !prev)}
-            />
+                {/* Trending Rentals: Responsive Grid of Product Cards for Women, Men, Kids & Festivals */}
+                <TrendingRentalsGrid
+                  products={displayedProducts}
+                  wishlistIds={wishlistIds}
+                  onToggleWishlist={handleToggleWishlist}
+                  onSelectProduct={(product) => setSelectedProduct(product)}
+                  selectedCategory={selectedCategory}
+                  selectedGender={selectedGender}
+                  sortOption={sortOption}
+                  onSortChange={setSortOption}
+                  filterUnder1500={filterUnder1500}
+                  onToggleFilterUnder1500={() => setFilterUnder1500((prev) => !prev)}
+                  filterFestivalOnly={filterFestivalOnly}
+                  onToggleFilterFestivalOnly={() => setFilterFestivalOnly((prev) => !prev)}
+                />
+              </>
+            )}
+
+            {activeTab === 'orders' && (
+              <OrdersView
+                orders={rentalOrders}
+                onRentAgain={(p) => setSelectedProduct(p)}
+                onTrackOrder={(ord) => {
+                  setConfirmedDeliveryOrder(ord);
+                  setDeliveryConfirmationOpen(true);
+                }}
+              />
+            )}
+
+            {activeTab === 'categories' && (
+              <CategoriesView
+                onSelectCategory={(catId) => {
+                  setSelectedCategory(catId);
+                  setActiveTab('home');
+                }}
+              />
+            )}
+
+            {activeTab === 'profile' && (
+              <ProfileView />
+            )}
           </>
         )}
 
@@ -466,6 +525,10 @@ export default function App() {
         isWishlisted={selectedProduct ? wishlistIds.has(selectedProduct.id) : false}
         onToggleWishlist={(p) => handleToggleWishlist(p)}
         onAddToCart={handleAddToCart}
+        onRentNow={(p, size, dur, start) => {
+          handleAddToCart(p, size, dur, start);
+          setCartOpen(true);
+        }}
       />
 
       {/* Search Modal */}
@@ -507,10 +570,171 @@ export default function App() {
           }
         }}
         onAddAddress={handleAddAddress}
-        onCheckout={(deliveryAddress) => {
+        onViewRentalHistory={() => {
           setCartOpen(false);
-          showToast(`Rental order confirmed for delivery to ${deliveryAddress.street}, ${deliveryAddress.city}!`, 'check');
+          setActivePortal('customer');
+          setActiveTab('orders');
+          setRentalHistoryOpen(true);
         }}
+        onCheckout={(deliveryAddress) => {
+          // Keep CartDrawer open at currentStep === 'success' so the customer can view when it will be delivered
+          if (cartItems.length > 0) {
+            const firstItem = cartItems[0];
+            const startDateStr = firstItem.startDate || new Date(Date.now() + 3 * 24 * 3600 * 1000).toISOString().split('T')[0];
+            const eventDateObj = new Date(startDateStr);
+            const deliveryDateObj = new Date(eventDateObj.getTime() - 1 * 24 * 3600 * 1000);
+            const deliveryDateStr = deliveryDateObj.toISOString().split('T')[0];
+            const endDateStr = new Date(eventDateObj.getTime() + firstItem.rentalDuration * 24 * 3600 * 1000).toISOString().split('T')[0];
+
+            const formattedDeliveryText = deliveryDateObj.toLocaleDateString('en-IN', {
+              weekday: 'short',
+              month: 'short',
+              day: 'numeric',
+            });
+
+            const newOrder: RentalOrder = {
+              id: `ord-nsk-${Date.now()}`,
+              bookingId: `RVG-NSK-2024-${Math.floor(1000 + Math.random() * 9000)}`,
+              product: firstItem.product,
+              selectedSize: firstItem.selectedSize,
+              backupSize: 'Free Backup Size Included',
+              rentalDuration: firstItem.rentalDuration,
+              startDate: startDateStr,
+              endDate: endDateStr,
+              bookingDate: new Date().toISOString().split('T')[0],
+              estimatedDeliveryDate: deliveryDateStr,
+              estimatedDeliveryTime: '1:30 PM',
+              deliveryAddress: deliveryAddress,
+              nashikLocality: `${deliveryAddress.apartment || deliveryAddress.street}, Nashik (${deliveryAddress.pincode})`,
+              rentalFee: firstItem.product.rentalPrice,
+              securityDeposit: firstItem.product.securityDeposit,
+              deliveryFee: 0,
+              discountApplied: Math.round(firstItem.product.rentalPrice * 0.40),
+              totalPaid: Math.round(firstItem.product.rentalPrice * 0.60) + firstItem.product.securityDeposit,
+              depositStatus: 'held',
+              status: 'booked',
+              statusLabel: 'Order Confirmed · Scheduled for Delivery',
+              currentStep: 1,
+              steps: [
+                {
+                  title: 'Order Confirmed in Nashik',
+                  desc: 'Booking verified with Central Logistics Center.',
+                  date: 'Today',
+                  time: 'Just now',
+                  done: true,
+                },
+                {
+                  title: 'Steam Sanitization & Dry Cleaning',
+                  desc: 'Medical-grade steam sterilization and inspection.',
+                  date: 'Upcoming',
+                  done: false,
+                  current: true,
+                },
+                {
+                  title: 'Out for Doorstep Fitting',
+                  desc: `Dispatched to ${deliveryAddress.apartment || 'Nashik destination'}.`,
+                  date: `${deliveryDateStr} by 1:30 PM`,
+                  done: false,
+                },
+                {
+                  title: 'Event Celebration Window',
+                  desc: 'Wear and enjoy your celebration without worry.',
+                  date: `${startDateStr} to ${endDateStr}`,
+                  done: false,
+                },
+                {
+                  title: 'Reverse Pickup & Deposit Refund',
+                  desc: 'Doorstep return. 100% deposit refunded to UPI within 2 hrs.',
+                  date: endDateStr,
+                  done: false,
+                },
+              ],
+              courierName: 'REVOGUE Nashik Express Courier',
+              courierTrackingNo: `NSK-EXP-${Math.floor(10000 + Math.random() * 90000)}`,
+              invoiceNumber: `INV-NSK-2024-${Math.floor(1000 + Math.random() * 9000)}`,
+              canExtend: true,
+            };
+
+            setRentalOrders((prev) => [newOrder, ...prev]);
+            setConfirmedDeliveryOrder(newOrder);
+            setCartItems([]);
+            showToast(`Rental booked! Arrives ${formattedDeliveryText} by 1:30 PM in Nashik 🚚`, 'sparkles');
+          }
+        }}
+      />
+
+      {/* Customer Rental History Modal (Shopping App style) */}
+      <RentalHistoryModal
+        isOpen={rentalHistoryOpen}
+        onClose={() => setRentalHistoryOpen(false)}
+        orders={rentalOrders}
+        onExtendOrder={(orderId, days) => {
+          setRentalOrders((prev) =>
+            prev.map((o) =>
+              o.id === orderId
+                ? {
+                    ...o,
+                    rentalDuration: (o.rentalDuration + days) as any,
+                    endDate: new Date(new Date(o.endDate).getTime() + days * 24 * 3600 * 1000).toISOString().split('T')[0],
+                  }
+                : o
+            )
+          );
+          showToast(`Rental extended by +${days} days with updated return date!`, 'check');
+        }}
+        onRentAgain={(prod) => {
+          setSelectedProduct(prod);
+          setRentalHistoryOpen(false);
+        }}
+        onTrackDelivery={(order) => {
+          setConfirmedDeliveryOrder(order);
+          setDeliveryConfirmationOpen(true);
+        }}
+      />
+
+      {/* Delivery Confirmation & Live Tracking Modal */}
+      <DeliveryConfirmationModal
+        order={confirmedDeliveryOrder}
+        isOpen={deliveryConfirmationOpen}
+        onClose={() => setDeliveryConfirmationOpen(false)}
+        onViewAllRentals={() => {
+          setDeliveryConfirmationOpen(false);
+          setActivePortal('customer');
+          setActiveTab('orders');
+          setRentalHistoryOpen(true);
+        }}
+      />
+
+      {/* Bottom Nav Bar for Mobile / Tablet Shopping */}
+      {activePortal === 'customer' && (
+        <div className="md:hidden">
+          <BottomNavBar
+            activeTab={activeTab}
+            onSelectTab={(tab) => {
+              if (tab === 'wishlist') {
+                setWishlistOpen(true);
+              } else {
+                setActiveTab(tab);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }
+            }}
+            wishlistCount={wishlistIds.size}
+            activeOrdersCount={
+              rentalOrders.filter(
+                (o) =>
+                  o.status === 'out_for_delivery' ||
+                  o.status === 'with_customer' ||
+                  o.status === 'dispatched'
+              ).length
+            }
+          />
+        </div>
+      )}
+
+      {/* Java Spring Boot Backend Architecture & REST API Explorer */}
+      <JavaBackendModal
+        isOpen={javaBackendOpen}
+        onClose={() => setJavaBackendOpen(false)}
       />
 
       {/* In-App Toast Notification */}

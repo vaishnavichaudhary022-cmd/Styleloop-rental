@@ -1,6 +1,21 @@
 import React from 'react';
-import { Search, Heart, ShoppingBag, MapPin, Sparkles, User as UserIcon, Store, Shield, ChevronDown, LogOut } from 'lucide-react';
+import {
+  Search,
+  Heart,
+  ShoppingBag,
+  MapPin,
+  Sparkles,
+  User as UserIcon,
+  Store,
+  Shield,
+  ChevronDown,
+  LogOut,
+  Package,
+  Server,
+  Code2
+} from 'lucide-react';
 import { TargetGender, User, Address, CategoryId } from '../types/rental';
+import { Logo } from './Logo';
 
 interface TopNavBarProps {
   currentUser: User | null;
@@ -9,9 +24,12 @@ interface TopNavBarProps {
   onSelectGender: (gender: TargetGender) => void;
   wishlistCount: number;
   cartCount: number;
+  activeRentalsCount?: number;
   onOpenSearch: () => void;
   onOpenWishlist: () => void;
   onOpenCart: () => void;
+  onOpenRentalHistory?: () => void;
+  onOpenJavaBackend?: () => void;
   onOpenAddressModal: () => void;
   onOpenAuthModal: () => void;
   onLogoClick: () => void;
@@ -27,9 +45,12 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
   onSelectGender,
   wishlistCount,
   cartCount,
+  activeRentalsCount = 2,
   onOpenSearch,
   onOpenWishlist,
   onOpenCart,
+  onOpenRentalHistory,
+  onOpenJavaBackend,
   onOpenAddressModal,
   onOpenAuthModal,
   onLogoClick,
@@ -44,7 +65,7 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
         <div className="flex items-center gap-2 truncate">
           <Sparkles className="w-3.5 h-3.5 text-amber-200 shrink-0" />
           <span className="truncate text-[11px] sm:text-xs">
-            Flat 40% Off on Rental Wear · Use Code: <strong className="font-mono bg-white/20 px-1.5 py-0.2 rounded font-bold">RENT40</strong> · Free Professional Dry Cleaning & Backup Size
+            Flat 40% Off on Rental Wear · Use Code: <strong className="font-mono bg-white/20 px-1.5 py-0.2 rounded font-bold">RENT40</strong> · Exclusively Serving Nashik, Maharashtra 📍
           </span>
         </div>
 
@@ -54,7 +75,7 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
             onClick={() => onNavigatePortal('shop')}
             className="hover:text-rose-100 flex items-center gap-1 transition"
           >
-            <Store className="w-3.5 h-3.5" /> Boutique Owner Portal
+            <Store className="w-3.5 h-3.5" /> Boutique Portal
           </button>
           <span>|</span>
           <button
@@ -69,36 +90,24 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
       {/* Main Website Header Row */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
         {/* Brand Logo & Location */}
-        <div className="flex items-center gap-6">
-          <button
-            onClick={onLogoClick}
-            className="flex flex-col items-start group text-left focus:outline-none"
-            title="REVOGUE Rentals"
-          >
-            <div className="flex items-center gap-1">
-              <span className="font-brand font-black text-2xl sm:text-3xl tracking-tight bg-gradient-to-r from-neutral-950 via-rose-950 to-rose-600 bg-clip-text text-transparent">
-                REVOGUE
-              </span>
-              <span className="w-2 h-2 rounded-full bg-rose-500 mb-2.5"></span>
-            </div>
-            <span className="text-[9px] font-extrabold uppercase tracking-[0.26em] text-rose-500 -mt-1">
-              Luxury Designer Rentals
-            </span>
-          </button>
+        <div className="flex items-center gap-4 sm:gap-6">
+          <Logo variant="header" onClick={onLogoClick} />
 
-          {/* Deliver To Address Chip */}
+          {/* Deliver To Address Chip - Nashik Only */}
           <button
             onClick={onOpenAddressModal}
-            className="hidden lg:flex items-center gap-2 px-3 py-1.5 bg-neutral-50 hover:bg-rose-50/60 border border-neutral-200/80 rounded-xl text-left transition group text-xs"
-            title="Click to change delivery location"
+            className="hidden lg:flex items-center gap-2 px-3 py-1.5 bg-rose-50/50 hover:bg-rose-100/60 border border-rose-200/80 rounded-xl text-left transition group text-xs shadow-2xs"
+            title="Click to change Nashik delivery area"
           >
             <MapPin className="w-4 h-4 text-rose-500 shrink-0 group-hover:scale-110 transition" />
             <div className="max-w-[170px] truncate">
-              <span className="text-[10px] text-neutral-400 font-bold block uppercase tracking-wider">
-                Deliver to
+              <span className="text-[9px] text-rose-700 font-extrabold block uppercase tracking-wider">
+                Delivering in Nashik 📍
               </span>
               <span className="font-bold text-neutral-900 truncate block text-[11px]">
-                {currentAddress ? `${currentAddress.city} - ${currentAddress.pincode}` : 'Select Address'}
+                {currentAddress
+                  ? `${currentAddress.apartment || currentAddress.street.slice(0, 16)} - ${currentAddress.pincode}`
+                  : 'College Rd, Nashik'}
               </span>
             </div>
             <ChevronDown className="w-3 h-3 text-neutral-400 ml-1" />
@@ -153,17 +162,37 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
           </button>
         </nav>
 
-        {/* Right Actions: Search bar, Wishlist, Cart & Profile */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        {/* Right Actions: Search bar, Rental History, Wishlist, Cart & Profile */}
+        <div className="flex items-center gap-2 sm:gap-2.5">
           {/* Search Trigger */}
           <button
             onClick={onOpenSearch}
-            className="flex items-center gap-2 px-3 py-2 bg-neutral-100 hover:bg-neutral-200/80 rounded-xl text-xs text-neutral-500 transition w-36 sm:w-56"
+            className="flex items-center gap-2 px-3 py-2 bg-neutral-100 hover:bg-neutral-200/80 rounded-xl text-xs text-neutral-500 transition w-32 sm:w-48 lg:w-52"
           >
-            <Search className="w-4 h-4 text-neutral-400" />
+            <Search className="w-4 h-4 text-neutral-400 shrink-0" />
             <span className="truncate hidden sm:inline">Search lehengas, sherwanis...</span>
             <span className="sm:hidden">Search</span>
           </button>
+
+          {/* Customer Rental History Button (Shopping App style) */}
+          {onOpenRentalHistory && (
+            <button
+              onClick={onOpenRentalHistory}
+              className="p-2 sm:px-3 sm:py-2 rounded-xl text-neutral-700 hover:text-rose-600 hover:bg-rose-50 transition relative flex items-center gap-1.5 border border-neutral-200/70"
+              aria-label="Rental History"
+              title="View Customer Rental History & Return Tracking"
+            >
+              <Package className="w-4 h-4 text-rose-600" />
+              <span className="hidden sm:inline text-xs font-bold text-neutral-800">
+                My Rentals
+              </span>
+              {activeRentalsCount > 0 && (
+                <span className="min-w-[17px] h-[17px] px-1 bg-rose-500 text-white text-[10px] font-black rounded-full flex items-center justify-center ring-2 ring-white">
+                  {activeRentalsCount}
+                </span>
+              )}
+            </button>
+          )}
 
           {/* Wishlist */}
           <button
@@ -205,7 +234,7 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
                   {currentUser.name[0] || 'U'}
                 </div>
                 <div className="hidden sm:block text-left">
-                  <span className="block text-[11px] truncate max-w-[90px]">{currentUser.name.split(' ')[0]}</span>
+                  <span className="block text-[11px] truncate max-w-[85px]">{currentUser.name.split(' ')[0]}</span>
                   <span className="block text-[9px] text-rose-600 font-semibold uppercase">
                     {currentUser.role === 'customer' ? 'Customer' : currentUser.role === 'shop_owner' ? 'Shop Owner' : 'Admin'}
                   </span>
@@ -232,7 +261,7 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
         </div>
       </div>
 
-      {/* Mobile Department Tabs Bar */}
+      {/* Mobile Department Tabs Bar & Nashik Location */}
       <div className="md:hidden px-4 py-2 border-t border-neutral-100 flex items-center justify-between gap-1 overflow-x-auto no-scrollbar">
         {[
           { id: 'all' as TargetGender, label: 'All' },
@@ -256,10 +285,10 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
         {/* Address Chip on mobile */}
         <button
           onClick={onOpenAddressModal}
-          className="flex items-center gap-1 text-[11px] text-rose-600 font-semibold shrink-0 ml-auto bg-rose-50 px-2 py-1 rounded-lg"
+          className="flex items-center gap-1 text-[11px] text-rose-700 font-bold shrink-0 ml-auto bg-rose-50 px-2.5 py-1 rounded-lg border border-rose-200"
         >
-          <MapPin className="w-3 h-3" />
-          <span>{currentAddress?.city || 'Address'}</span>
+          <MapPin className="w-3 h-3 text-rose-500" />
+          <span>{currentAddress?.apartment || 'Nashik 📍'}</span>
         </button>
       </div>
     </header>
