@@ -114,53 +114,6 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
           </button>
         </div>
 
-        {/* Primary Department Tabs: WOMEN, MEN, KIDS, FESTIVAL & FANCY DRESS */}
-        <nav className="hidden md:flex items-center gap-1 sm:gap-2">
-          {[
-            { id: 'all' as TargetGender, label: 'All Fits' },
-            { id: 'women' as TargetGender, label: 'Women' },
-            { id: 'men' as TargetGender, label: 'Men' },
-            { id: 'kids' as TargetGender, label: 'Kids' },
-          ].map((tab) => {
-            const isActive = selectedGender === tab.id;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => onSelectGender(tab.id)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold tracking-tight transition ${
-                  isActive
-                    ? 'bg-neutral-900 text-white shadow-xs'
-                    : 'text-neutral-600 hover:text-neutral-950 hover:bg-neutral-100'
-                }`}
-              >
-                {tab.label}
-              </button>
-            );
-          })}
-
-          <button
-            onClick={() => onSelectCategory('diwali')}
-            className="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold tracking-tight text-amber-700 bg-amber-50 hover:bg-amber-100 transition flex items-center gap-1 border border-amber-200/60"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-            Diwali & Puja
-          </button>
-
-          <button
-            onClick={() => onSelectCategory('fancydress')}
-            className="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold tracking-tight text-purple-700 bg-purple-50 hover:bg-purple-100 transition flex items-center gap-1 border border-purple-200/60"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-purple-500" />
-            Fancy Dress
-          </button>
-
-          <button
-            onClick={() => onSelectCategory('navratri')}
-            className="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold tracking-tight text-rose-700 bg-rose-50 hover:bg-rose-100 transition flex items-center gap-1 border border-rose-200/60"
-          >
-            Navratri Garba
-          </button>
-        </nav>
 
         {/* Right Actions: Search bar, Rental History, Wishlist, Cart & Profile */}
         <div className="flex items-center gap-2 sm:gap-2.5">

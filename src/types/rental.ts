@@ -2,17 +2,25 @@ export type Role = 'customer' | 'shop_owner' | 'admin';
 
 export type TargetGender = 'women' | 'men' | 'kids' | 'all';
 
+export type FestivalId = 'diwali' | 'navratri' | 'eid' | 'christmas';
+
+export type OccasionId =
+  | 'wedding'
+  | 'engagement'
+  | 'reception'
+  | 'haldi'
+  | 'mehendi'
+  | 'sangeet'
+  | 'party'
+  | 'birthday'
+  | 'casual'
+  | 'festive'
+  | 'formal';
+
 export type CategoryId =
   | 'all'
-  | 'party'
-  | 'wedding'
-  | 'festive'
-  | 'formal'
-  | 'navratri'
-  | 'diwali'
-  | 'eid'
-  | 'christmas'
-  | 'haldi'
+  | FestivalId
+  | OccasionId
   | 'fancydress';
 
 export interface Category {
@@ -24,6 +32,8 @@ export interface Category {
   badge?: string;
   description?: string;
   festivalType?: boolean;
+  group?: 'festival' | 'occasion' | 'all';
+  iconEmoji?: string;
 }
 
 export type RentalDuration = 3 | 4 | 7 | 10;
@@ -78,8 +88,14 @@ export interface DressProduct {
   fabric: string;
   securityDeposit: number;
   festival?: string;
+  occasions?: OccasionId[];
+  festivals?: FestivalId[];
   featured?: boolean;
   shopOwnerName?: string;
+  includes?: string;
+  ageGroup?: string;
+  condition?: string;
+  idealFor?: string;
 }
 
 export interface CartItem {

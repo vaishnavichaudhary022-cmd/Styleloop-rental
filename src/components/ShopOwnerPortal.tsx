@@ -199,6 +199,12 @@ export const ShopOwnerPortal: React.FC<ShopOwnerPortalProps> = ({
                 src={p.image}
                 alt={p.name}
                 className="w-20 h-28 object-cover rounded-xl shrink-0"
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  if (!target.src.endsWith('/assets/fallback-dress.svg')) {
+                    target.src = '/assets/fallback-dress.svg';
+                  }
+                }}
               />
               <div className="flex-1 min-w-0 flex flex-col justify-between">
                 <div>

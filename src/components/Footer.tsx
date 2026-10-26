@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, Sparkles, Truck, RotateCcw, Heart, Store, Shield, MapPin } from 'lucide-react';
+import { MapPin, Store, Shield } from 'lucide-react';
 import { CategoryId, TargetGender } from '../types/rental';
 import { Logo } from './Logo';
 
@@ -15,172 +15,82 @@ export const Footer: React.FC<FooterProps> = ({
   onOpenPortal,
 }) => {
   return (
-    <footer className="bg-neutral-950 text-neutral-300 pt-12 pb-8 border-t border-neutral-800">
-      {/* Value Props Strip */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10 border-b border-neutral-800 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-xs">
-        <div className="flex items-start gap-3">
-          <div className="p-2.5 rounded-xl bg-neutral-800 text-rose-500 shrink-0">
-            <Sparkles className="w-5 h-5" />
-          </div>
-          <div>
-            <h4 className="font-bold text-white text-sm">Professional Dry Cleaning</h4>
-            <p className="text-neutral-400 mt-1">Every garment is medical-grade steam sanitized and sealed before doorstep delivery.</p>
-          </div>
-        </div>
-
-        <div className="flex items-start gap-3">
-          <div className="p-2.5 rounded-xl bg-neutral-800 text-rose-500 shrink-0">
-            <ShieldCheck className="w-5 h-5" />
-          </div>
-          <div>
-            <h4 className="font-bold text-white text-sm">100% Refundable Deposit</h4>
-            <p className="text-neutral-400 mt-1">Security deposits are held safely in escrow and automatically returned within 2 hours of return.</p>
-          </div>
-        </div>
-
-        <div className="flex items-start gap-3">
-          <div className="p-2.5 rounded-xl bg-neutral-800 text-rose-500 shrink-0">
-            <Truck className="w-5 h-5" />
-          </div>
-          <div>
-            <h4 className="font-bold text-white text-sm">Doorstep Delivery in Nashik</h4>
-            <p className="text-neutral-400 mt-1">Express 2-3 hour sanitized delivery across College Rd, Gangapur Rd, Indira Nagar & beyond.</p>
-          </div>
-        </div>
-
-        <div className="flex items-start gap-3">
-          <div className="p-2.5 rounded-xl bg-neutral-800 text-rose-500 shrink-0">
-            <RotateCcw className="w-5 h-5" />
-          </div>
-          <div>
-            <h4 className="font-bold text-white text-sm">Free Backup Size Included</h4>
-            <p className="text-neutral-400 mt-1">Select a second size for free on selected wedding and cocktail outfits for perfect fit.</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Footer Links */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid grid-cols-2 md:grid-cols-5 gap-8 text-xs">
-        {/* Brand Column */}
-        <div className="col-span-2 space-y-3">
-          <Logo variant="footer" />
-          <p className="text-neutral-400 text-xs leading-relaxed max-w-sm">
-            Nashik's foremost designer wardrobe and festival costume rental platform. Wear luxury labels for weddings, Navratri garba, Diwali parties, black-tie galas, and school fancy dress functions.
-          </p>
-          <div className="pt-2 text-neutral-400 text-xs space-y-1">
-            <div className="flex items-center gap-1.5 font-bold text-rose-400">
-              <MapPin className="w-3.5 h-3.5" />
-              <span>Exclusively Delivering across Nashik, Maharashtra:</span>
+    <footer className="bg-neutral-950 text-neutral-300 py-8 border-t border-neutral-800">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 pb-6 border-b border-neutral-800/80">
+          {/* Brand & Location */}
+          <div className="flex flex-col sm:flex-row items-center gap-3 text-center sm:text-left">
+            <Logo variant="footer" />
+            <span className="hidden sm:inline text-neutral-700">|</span>
+            <div className="flex items-center gap-1.5 text-xs text-neutral-400">
+              <MapPin className="w-3.5 h-3.5 text-rose-500 shrink-0" />
+              <span>Designer Wardrobe & Costume Rentals · Nashik</span>
             </div>
-            <p className="text-neutral-300 font-medium">
-              College Road · Gangapur Road · Mahatma Nagar · Indira Nagar · Govind Nagar · Panchavati · CIDCO · Nashik Road · Deolali
-            </p>
+          </div>
+
+          {/* Quick Category Navigation */}
+          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs font-medium text-neutral-400">
+            <button
+              onClick={() => onSelectGender('women')}
+              className="hover:text-white transition"
+            >
+              Women
+            </button>
+            <button
+              onClick={() => onSelectGender('men')}
+              className="hover:text-white transition"
+            >
+              Men
+            </button>
+            <button
+              onClick={() => onSelectGender('kids')}
+              className="hover:text-white transition"
+            >
+              Kids
+            </button>
+            <button
+              onClick={() => onSelectCategory('fancydress')}
+              className="hover:text-white transition text-rose-400 font-semibold"
+            >
+              Costumes
+            </button>
+            <button
+              onClick={() => onSelectCategory('wedding')}
+              className="hover:text-white transition"
+            >
+              Weddings
+            </button>
+          </div>
+
+          {/* Boutique & Admin Portals */}
+          <div className="flex items-center gap-3 text-xs">
+            <button
+              onClick={() => onOpenPortal('shop')}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-rose-400 hover:text-rose-300 font-medium border border-neutral-800 transition"
+            >
+              <Store className="w-3.5 h-3.5" />
+              <span>Shop Portal</span>
+            </button>
+            <button
+              onClick={() => onOpenPortal('admin')}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-neutral-400 hover:text-white font-medium border border-neutral-800 transition"
+            >
+              <Shield className="w-3.5 h-3.5" />
+              <span>Admin</span>
+            </button>
           </div>
         </div>
 
-        {/* Women's & Men's */}
-        <div className="space-y-2.5">
-          <h4 className="font-bold text-white uppercase tracking-wider text-[11px]">
-            Departments
-          </h4>
-          <ul className="space-y-2 text-neutral-400">
-            <li>
-              <button onClick={() => onSelectGender('women')} className="hover:text-white transition">
-                Women's Lehengas & Gowns
-              </button>
-            </li>
-            <li>
-              <button onClick={() => onSelectGender('men')} className="hover:text-white transition">
-                Men's Sherwanis & Tuxedos
-              </button>
-            </li>
-            <li>
-              <button onClick={() => onSelectGender('kids')} className="hover:text-white transition">
-                Kids Party & Costumes
-              </button>
-            </li>
-            <li>
-              <button onClick={() => onSelectGender('all')} className="hover:text-white transition">
-                Trending 40% Off Drops
-              </button>
-            </li>
-          </ul>
-        </div>
-
-        {/* Festivals & Fancy Themes */}
-        <div className="space-y-2.5">
-          <h4 className="font-bold text-white uppercase tracking-wider text-[11px]">
-            Festivals & Themes
-          </h4>
-          <ul className="space-y-2 text-neutral-400">
-            <li>
-              <button onClick={() => onSelectCategory('navratri')} className="hover:text-white transition">
-                Navratri Garba Chaniya Choli
-              </button>
-            </li>
-            <li>
-              <button onClick={() => onSelectCategory('diwali')} className="hover:text-white transition">
-                Diwali Silk & Zari Sets
-              </button>
-            </li>
-            <li>
-              <button onClick={() => onSelectCategory('haldi')} className="hover:text-white transition">
-                Haldi & Mehendi Yellows
-              </button>
-            </li>
-            <li>
-              <button onClick={() => onSelectCategory('fancydress')} className="hover:text-white transition">
-                Fancy Dress & Cosplay Themes
-              </button>
-            </li>
-            <li>
-              <button onClick={() => onSelectCategory('wedding')} className="hover:text-white transition">
-                Bridal & Groom Couture
-              </button>
-            </li>
-          </ul>
-        </div>
-
-        {/* Partner Portals */}
-        <div className="space-y-2.5">
-          <h4 className="font-bold text-white uppercase tracking-wider text-[11px]">
-            Boutique Network
-          </h4>
-          <ul className="space-y-2 text-neutral-400">
-            <li>
-              <button
-                onClick={() => onOpenPortal('shop')}
-                className="text-rose-400 hover:text-rose-300 font-semibold flex items-center gap-1.5 transition"
-              >
-                <Store className="w-3.5 h-3.5" /> Shop Owner Portal
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => onOpenPortal('admin')}
-                className="text-neutral-400 hover:text-white font-semibold flex items-center gap-1.5 transition"
-              >
-                <Shield className="w-3.5 h-3.5" /> Admin Console
-              </button>
-            </li>
-            <li className="pt-2 text-[11px] text-neutral-500">
-              Own a designer boutique? List your catalog and earn recurring monthly rental revenue.
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      {/* Copyright */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 border-t border-neutral-800/80 flex flex-col sm:flex-row items-center justify-between text-[11px] text-neutral-500 gap-3">
-        <p>© 2026 REVOGUE Rentals Pvt. Ltd. All rights reserved.</p>
-        <div className="flex items-center gap-4">
-          <span>Privacy Policy</span>
-          <span>·</span>
-          <span>Rental Agreement</span>
-          <span>·</span>
-          <span>Hygiene Standards</span>
-          <span>·</span>
-          <span>Security Escrow</span>
+        {/* Minimal Copyright & Guarantees */}
+        <div className="pt-5 flex flex-col sm:flex-row items-center justify-between text-[11px] text-neutral-500 gap-3">
+          <p>© 2026 REVOGUE Rentals Pvt. Ltd. All rights reserved.</p>
+          <div className="flex items-center gap-3 text-neutral-400">
+            <span>Sanitized Guarantee</span>
+            <span>·</span>
+            <span>Refundable Deposit</span>
+            <span>·</span>
+            <span>Rental Policy</span>
+          </div>
         </div>
       </div>
     </footer>

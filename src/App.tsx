@@ -5,8 +5,8 @@
 
 import React, { useState, useMemo } from 'react';
 import { TopNavBar } from './components/TopNavBar';
-import { PromoBanner } from './components/PromoBanner';
-import { CategoryRow } from './components/CategoryRow';
+import { HeroMomentBanner } from './components/HeroMomentBanner';
+import { CategoryNameNav } from './components/CategoryNameNav';
 import { TrendingRentalsGrid } from './components/TrendingRentalsGrid';
 import { ProductDetailModal } from './components/ProductDetailModal';
 import { SearchModal } from './components/SearchModal';
@@ -161,7 +161,17 @@ export default function App() {
 
     // Filter by Category (Occasion / Festival)
     if (selectedCategory !== 'all') {
-      list = list.filter((p) => p.category === selectedCategory);
+      list = list.filter((p) => {
+        if (p.category === selectedCategory) return true;
+        if (p.occasions && p.occasions.includes(selectedCategory as any)) return true;
+        if (p.festivals && p.festivals.includes(selectedCategory as any)) return true;
+        const catStr = selectedCategory.toLowerCase();
+        if (p.festival && p.festival.toLowerCase().includes(catStr)) return true;
+        if (p.tag && p.tag.toLowerCase().includes(catStr)) return true;
+        if (p.name && p.name.toLowerCase().includes(catStr)) return true;
+        if (p.description && p.description.toLowerCase().includes(catStr)) return true;
+        return false;
+      });
     }
 
     // Filter by Price Under ₹1500
@@ -173,10 +183,12 @@ export default function App() {
     if (filterFestivalOnly) {
       list = list.filter(
         (p) =>
-          p.festival ||
+          Boolean(p.festival) ||
+          Boolean(p.festivals && p.festivals.length > 0) ||
           p.category === 'navratri' ||
           p.category === 'diwali' ||
           p.category === 'eid' ||
+          p.category === 'christmas' ||
           p.category === 'haldi' ||
           p.category === 'fancydress'
       );
@@ -396,20 +408,21 @@ export default function App() {
           <>
             {activeTab === 'home' && (
               <>
-                {/* Bold Promotional Hero Banner */}
-                <PromoBanner
-                  onBannerClick={() => {
-                    showToast('Coupon code RENT40 active! Flat 40% off applied.', 'sparkles');
+                {/* Hero Banner: 'Dress for the Moment, Not Forever' */}
+                <HeroMomentBanner
+                  onSearchClick={() => setSearchOpen(true)}
+                  onExploreClick={() => {
+                    const el = document.getElementById('trending-rentals-section');
+                    el?.scrollIntoView({ behavior: 'smooth' });
                   }}
-                  onCodeCopiedToast={(code) => {
-                    showToast(`Coupon code ${code} copied to clipboard!`, 'check');
-                  }}
+                  onSelectAudience={(aud) => setSelectedGender(aud)}
                 />
 
-                {/* Circular Category Row: Party, Wedding, Festive, Formal, Navratri, Diwali, Haldi, Fancy Dress */}
-                <CategoryRow
+                {/* Category only names bar below hero banner */}
+                <CategoryNameNav
                   selectedCategory={selectedCategory}
                   onSelectCategory={(catId) => setSelectedCategory(catId)}
+                  onViewAll={() => setActiveTab('categories')}
                 />
 
                 {/* Trending Rentals: Responsive Grid of Product Cards for Women, Men, Kids & Festivals */}
@@ -419,6 +432,7 @@ export default function App() {
                   onToggleWishlist={handleToggleWishlist}
                   onSelectProduct={(product) => setSelectedProduct(product)}
                   selectedCategory={selectedCategory}
+                  onSelectCategory={(catId) => setSelectedCategory(catId)}
                   selectedGender={selectedGender}
                   sortOption={sortOption}
                   onSortChange={setSortOption}

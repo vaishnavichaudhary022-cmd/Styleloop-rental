@@ -27,6 +27,10 @@ export const SearchModal: React.FC<SearchModalProps> = ({
         p.brand.toLowerCase().includes(q) ||
         p.category.toLowerCase().includes(q) ||
         p.color.toLowerCase().includes(q) ||
+        p.tag.toLowerCase().includes(q) ||
+        (p.festival && p.festival.toLowerCase().includes(q)) ||
+        (p.occasions && p.occasions.some((occ) => occ.toLowerCase().includes(q))) ||
+        (p.festivals && p.festivals.some((fst) => fst.toLowerCase().includes(q))) ||
         p.description.toLowerCase().includes(q)
     );
   }, [searchQuery, products]);
@@ -85,6 +89,12 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                       src={p.image}
                       alt={p.name}
                       className="w-14 h-16 object-cover rounded-lg shrink-0"
+                      onError={(e) => {
+                        const target = e.currentTarget;
+                        if (!target.src.endsWith('/assets/fallback-dress.svg')) {
+                          target.src = '/assets/fallback-dress.svg';
+                        }
+                      }}
                     />
                     <div className="flex-1 min-w-0">
                       <div className="text-[10px] font-bold text-rose-600 uppercase tracking-wider">

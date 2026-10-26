@@ -1,6 +1,7 @@
 import React from 'react';
-import { Star, Heart, Flame, Sparkles, SlidersHorizontal, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Star, Heart, Flame, Sparkles, SlidersHorizontal, ArrowRight, ShieldCheck, X, ShoppingBag } from 'lucide-react';
 import { DressProduct, CategoryId, TargetGender } from '../types/rental';
+import { CATEGORIES } from '../data/rentalData';
 
 interface TrendingRentalsGridProps {
   products: DressProduct[];
@@ -8,6 +9,7 @@ interface TrendingRentalsGridProps {
   onToggleWishlist: (product: DressProduct, e: React.MouseEvent) => void;
   onSelectProduct: (product: DressProduct) => void;
   selectedCategory: CategoryId;
+  onSelectCategory?: (id: CategoryId) => void;
   selectedGender: TargetGender;
   sortOption: string;
   onSortChange: (sort: string) => void;
@@ -23,6 +25,7 @@ export const TrendingRentalsGrid: React.FC<TrendingRentalsGridProps> = ({
   onToggleWishlist,
   onSelectProduct,
   selectedCategory,
+  onSelectCategory,
   selectedGender,
   sortOption,
   onSortChange,
@@ -31,8 +34,9 @@ export const TrendingRentalsGrid: React.FC<TrendingRentalsGridProps> = ({
   filterFestivalOnly,
   onToggleFilterFestivalOnly,
 }) => {
+  const activeCategoryObj = CATEGORIES.find((c) => c.id === selectedCategory);
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+    <section id="trending-rentals-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-7">
       {/* Section Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-neutral-200/80">
         <div>
@@ -51,6 +55,18 @@ export const TrendingRentalsGrid: React.FC<TrendingRentalsGridProps> = ({
 
         {/* Filter and Sort Bar */}
         <div className="flex items-center gap-2.5 flex-wrap">
+          {/* Active Category Filter Pill */}
+          {selectedCategory !== 'all' && activeCategoryObj && (
+            <button
+              onClick={() => onSelectCategory && onSelectCategory('all')}
+              className="px-3 py-1.5 text-xs font-bold rounded-xl bg-rose-600 text-white flex items-center gap-1.5 shadow-xs transition hover:bg-rose-700"
+              title="Click to clear category filter"
+            >
+              <span>{activeCategoryObj.iconEmoji || '✨'}</span>
+              <span>{activeCategoryObj.name}</span>
+              <X className="w-3 h-3 ml-0.5" />
+            </button>
+          )}
           {/* Under ₹1500 filter */}
           <button
             onClick={onToggleFilterUnder1500}
@@ -116,6 +132,12 @@ export const TrendingRentalsGrid: React.FC<TrendingRentalsGridProps> = ({
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    if (!target.src.endsWith('/assets/fallback-dress.svg')) {
+                      target.src = '/assets/fallback-dress.svg';
+                    }
+                  }}
                 />
 
                 {/* Soft gradient overlay */}
@@ -164,7 +186,7 @@ export const TrendingRentalsGrid: React.FC<TrendingRentalsGridProps> = ({
               </div>
 
               {/* Product Info Body */}
-              <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between">
+              <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between bg-white">
                 <div>
                   {/* Department & Brand */}
                   <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-neutral-400 font-bold tracking-wider uppercase truncate">
@@ -174,51 +196,68 @@ export const TrendingRentalsGrid: React.FC<TrendingRentalsGridProps> = ({
                   </div>
 
                   {/* Product Title */}
-                  <h3 className="mt-1 text-xs sm:text-sm font-bold text-neutral-900 line-clamp-1 group-hover:text-rose-600 transition">
+                  <h3 className="mt-1 text-xs sm:text-sm font-bold text-neutral-900 line-clamp-1 group-hover:text-rose-600 transition font-brand">
                     {product.name}
                   </h3>
 
-                  {/* Festival or Occasion Subtitle */}
+                  {/* Festival or Occasion Tag */}
                   {product.festival && (
-                    <div className="mt-0.5 text-[10px] font-semibold text-purple-700 truncate">
-                      ★ {product.festival}
+                    <div className="mt-0.5 text-[10px] font-semibold text-purple-700 truncate flex items-center gap-1">
+                      <Sparkles className="w-2.5 h-2.5 text-purple-500 shrink-0" />
+                      <span>{product.festival}</span>
                     </div>
                   )}
 
-                  {/* 'rented X times' text */}
-                  <div className="mt-1 text-[11px] text-rose-600 font-medium flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-rose-500 inline-block"></span>
-                    <span>Rented {product.rentedCount} times this month</span>
-                  </div>
-                </div>
-
-                {/* Pricing Block with Strikethrough Original Retail Price */}
-                <div className="mt-3 pt-2.5 border-t border-neutral-100 flex items-baseline justify-between">
-                  <div>
-                    <div className="flex items-baseline gap-1.5">
-                      <span className="text-sm sm:text-base font-black text-neutral-950 font-brand">
-                        ₹{product.rentalPrice.toLocaleString('en-IN')}
-                      </span>
-                      <span className="text-xs text-neutral-400 line-through">
-                        ₹{product.retailPrice.toLocaleString('en-IN')}
+                  {/* Pricing Block with Strikethrough Original Retail Price & Discount */}
+                  <div className="mt-2 pt-2 border-t border-neutral-100 flex items-baseline justify-between">
+                    <div>
+                      <div className="flex items-baseline gap-1.5 flex-wrap">
+                        <span className="text-base sm:text-lg font-black text-neutral-950 font-brand">
+                          ₹{product.rentalPrice.toLocaleString('en-IN')}
+                        </span>
+                        <span className="text-xs text-neutral-400 line-through">
+                          ₹{product.retailPrice.toLocaleString('en-IN')}
+                        </span>
+                        <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.2 rounded">
+                          {product.discountPercentage}% OFF
+                        </span>
+                      </div>
+                      <span className="text-[10px] text-neutral-500 block font-medium">
+                        4 Days Rental Fee
                       </span>
                     </div>
-                    <span className="text-[10px] text-neutral-500 block -mt-0.5 font-medium">
-                      4 Days Rental Fee
-                    </span>
+                    <div className="text-right text-[10px] text-neutral-400 hidden sm:block">
+                      <span className="text-rose-600 font-semibold">{product.rentedCount}+</span> rents
+                    </div>
                   </div>
 
-                  {/* Quick Rent Action */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onSelectProduct(product);
-                    }}
-                    className="px-3 py-1.5 bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white rounded-xl text-xs font-bold uppercase tracking-wider transition active:scale-95 shadow-2xs"
-                  >
-                    Rent Now
-                  </button>
+                  {/* Clean Size Availability - Only needed detail */}
+                  <div className="mt-2.5 flex items-center justify-between text-[11px] text-neutral-500 pt-2 border-t border-neutral-100/80">
+                    <span className="font-medium">
+                      {product.targetGender === 'kids' && product.ageGroup ? (
+                        <span>Age: <strong className="text-neutral-800 font-semibold">{product.ageGroup}</strong></span>
+                      ) : (
+                        <span>Sizes: <strong className="text-neutral-800 font-semibold">{product.sizes.slice(0, 4).join(', ')}</strong></span>
+                      )}
+                    </span>
+                    <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">
+                      ✓ Available
+                    </span>
+                  </div>
                 </div>
+
+                {/* Prominent Rent Now Action Button (Replaces 'Contact Supplier' as requested) */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelectProduct(product);
+                  }}
+                  className="w-full mt-3 py-2.5 px-3 bg-gradient-to-r from-rose-600 via-pink-600 to-purple-600 hover:from-rose-700 hover:to-purple-700 text-white font-black rounded-xl text-xs uppercase tracking-wider transition-all shadow-md hover:shadow-lg active:scale-[0.98] flex items-center justify-center gap-1.5 group/btn cursor-pointer"
+                >
+                  <ShoppingBag className="w-3.5 h-3.5 group-hover/btn:scale-110 transition-transform" />
+                  <span>Rent Now</span>
+                  <ArrowRight className="w-3.5 h-3.5 ml-0.5 opacity-80 group-hover/btn:translate-x-0.5 transition-transform" />
+                </button>
               </div>
             </div>
           );

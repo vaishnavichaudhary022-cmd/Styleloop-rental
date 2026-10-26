@@ -173,6 +173,12 @@ export const DeliveryConfirmationModal: React.FC<DeliveryConfirmationModalProps>
               src={order.product.image}
               alt={order.product.name}
               className="w-16 h-20 object-cover object-top rounded-xl border border-neutral-100 shrink-0"
+              onError={(e) => {
+                const target = e.currentTarget;
+                if (!target.src.endsWith('/assets/fallback-dress.svg')) {
+                  target.src = '/assets/fallback-dress.svg';
+                }
+              }}
             />
             <div className="flex-1 min-w-0">
               <span className="text-[10px] font-bold uppercase tracking-wider text-rose-600 block">

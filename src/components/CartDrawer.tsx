@@ -284,6 +284,12 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                       alt={item.product.name}
                       referrerPolicy="no-referrer"
                       className="w-20 h-26 object-cover rounded-xl shrink-0"
+                      onError={(e) => {
+                        const target = e.currentTarget;
+                        if (!target.src.endsWith('/assets/fallback-dress.svg')) {
+                          target.src = '/assets/fallback-dress.svg';
+                        }
+                      }}
                     />
                     <div className="flex-1 min-w-0 flex flex-col justify-between">
                       <div>

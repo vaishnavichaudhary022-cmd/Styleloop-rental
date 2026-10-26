@@ -122,6 +122,12 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
             alt={product.name}
             referrerPolicy="no-referrer"
             className="w-full h-full object-cover object-top"
+            onError={(e) => {
+              const target = e.currentTarget;
+              if (!target.src.endsWith('/assets/fallback-dress.svg')) {
+                target.src = '/assets/fallback-dress.svg';
+              }
+            }}
           />
           <div className="absolute top-3 left-3 bg-rose-600 text-white text-[10px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider shadow-xs">
             {product.discountPercentage}% OFF
@@ -170,6 +176,42 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               <span className="block text-[9px] text-neutral-400 mt-0.5">
                 + ₹{product.securityDeposit} refundable deposit
               </span>
+            </div>
+          </div>
+
+          {/* Detailed Specifications Table */}
+          <div className="bg-neutral-50 rounded-2xl p-3 border border-neutral-200/80 space-y-2">
+            <h4 className="text-[11px] font-black uppercase tracking-wider text-neutral-800 flex items-center gap-1.5">
+              <span>📋</span> Costume & Outfit Specifications
+            </h4>
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className="bg-white p-2.5 rounded-xl border border-neutral-100">
+                <span className="text-[10px] text-neutral-400 font-semibold block">Fabric & Material</span>
+                <span className="font-bold text-neutral-900 block truncate">{product.fabric || 'Pure Silk Blend'}</span>
+              </div>
+              <div className="bg-white p-2.5 rounded-xl border border-neutral-100">
+                <span className="text-[10px] text-neutral-400 font-semibold block">Age Group / Fit</span>
+                <span className="font-bold text-neutral-900 block truncate">
+                  {product.ageGroup || (product.targetGender === 'kids' ? `Kids (${product.sizes.join(', ')})` : `Adults (${product.sizes.join(', ')})`)}
+                </span>
+              </div>
+              <div className="col-span-2 bg-white p-2.5 rounded-xl border border-neutral-100">
+                <span className="text-[10px] text-neutral-400 font-semibold block">Package Includes</span>
+                <span className="font-bold text-neutral-900 block">
+                  {product.includes || (product.targetGender === 'kids' ? 'Full Costume + Props + Mukut/Headpiece' : 'Complete Outfit + Matching Accessories + Stole')}
+                </span>
+              </div>
+              <div className="bg-white p-2.5 rounded-xl border border-neutral-100">
+                <span className="text-[10px] text-neutral-400 font-semibold block">Security Deposit</span>
+                <span className="font-bold text-emerald-700 block">₹{product.securityDeposit} (100% Refundable)</span>
+              </div>
+              <div className="bg-white p-2.5 rounded-xl border border-neutral-100">
+                <span className="text-[10px] text-neutral-400 font-semibold block">Hygiene Status</span>
+                <span className="font-bold text-emerald-700 block flex items-center gap-1">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                  {product.condition || '100% Sanitized & Dry-Cleaned'}
+                </span>
+              </div>
             </div>
           </div>
 

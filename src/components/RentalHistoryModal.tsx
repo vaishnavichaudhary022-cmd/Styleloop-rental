@@ -375,6 +375,12 @@ export const RentalHistoryModal: React.FC<RentalHistoryModalProps> = ({
                         src={order.product.image}
                         alt={order.product.name}
                         className="w-20 h-28 sm:w-24 sm:h-32 object-cover rounded-2xl border border-neutral-100 shrink-0 shadow-2xs"
+                        onError={(e) => {
+                          const target = e.currentTarget;
+                          if (!target.src.endsWith('/assets/fallback-dress.svg')) {
+                            target.src = '/assets/fallback-dress.svg';
+                          }
+                        }}
                       />
                       <div className="space-y-1 min-w-0">
                         <span className="text-[10px] font-extrabold uppercase tracking-wider text-rose-600 block">

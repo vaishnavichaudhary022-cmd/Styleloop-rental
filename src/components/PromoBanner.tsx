@@ -121,6 +121,12 @@ export const PromoBanner: React.FC<PromoBannerProps> = ({
               src={PROMO_BANNER_DATA.bannerImage}
               alt="Designer rental wear showcase"
               className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700"
+              onError={(e) => {
+                const target = e.currentTarget;
+                if (!target.src.endsWith('/assets/fallback-dress.svg')) {
+                  target.src = '/assets/fallback-dress.svg';
+                }
+              }}
             />
             {/* Discount tag badge over image */}
             <div className="absolute top-2.5 right-2.5 bg-rose-600/95 backdrop-blur-xs text-white text-xs font-black px-2.5 py-1 rounded-lg shadow-md uppercase tracking-wider">
