@@ -44,22 +44,22 @@ export const CategoryNameNav: React.FC<CategoryNameNavProps> = ({
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5">
-      <div className="relative flex items-center bg-white border-y border-neutral-200/80 shadow-2xs">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
+      <div className="relative flex items-center bg-white border-y border-stone-200/80 shadow-2xs">
         
         {/* Left Scroll Button (Desktop) */}
         <button
           onClick={() => scroll('left')}
-          className="hidden sm:flex items-center justify-center w-8 h-8 rounded-full bg-white text-neutral-600 hover:text-neutral-950 hover:bg-neutral-100 shadow-xs border border-neutral-200 shrink-0 mx-1 z-10 transition"
+          className="hidden sm:flex items-center justify-center w-7 h-7 rounded-lg bg-white text-stone-600 hover:text-stone-900 hover:bg-stone-100 shadow-2xs border border-stone-200 shrink-0 mx-1 z-10 transition-colors cursor-pointer"
           aria-label="Scroll left"
         >
-          <ChevronLeft className="w-4 h-4" />
+          <ChevronLeft className="w-3.5 h-3.5" />
         </button>
 
         {/* Category Names Horizontal Row */}
         <div
           ref={scrollRef}
-          className="flex-1 flex items-center gap-1.5 sm:gap-2 overflow-x-auto py-2 px-1 sm:px-2 no-scrollbar scroll-smooth"
+          className="flex-1 flex items-center gap-1.5 overflow-x-auto py-2 px-1 sm:px-2 no-scrollbar scroll-smooth"
         >
           {CATEGORY_NAMES_LIST.map((cat) => {
             const isSelected = selectedCategory === cat.id;
@@ -67,10 +67,10 @@ export const CategoryNameNav: React.FC<CategoryNameNavProps> = ({
               <button
                 key={cat.id}
                 onClick={() => onSelectCategory(cat.id)}
-                className={`whitespace-nowrap px-3.5 sm:px-4 py-1.5 rounded-full text-xs sm:text-[13px] font-semibold transition-all duration-200 shrink-0 flex items-center gap-1.5 cursor-pointer ${
+                className={`whitespace-nowrap px-3 py-1.5 rounded-lg text-xs font-medium transition-colors shrink-0 flex items-center gap-1.5 cursor-pointer ${
                   isSelected
-                    ? 'bg-neutral-900 text-white shadow-xs font-bold scale-[1.02]'
-                    : 'text-neutral-700 hover:text-neutral-950 hover:bg-neutral-100/90'
+                    ? 'bg-stone-900 text-white shadow-xs'
+                    : 'text-stone-700 hover:text-stone-900 hover:bg-stone-100'
                 }`}
               >
                 {cat.icon && <span className="text-xs">{cat.icon}</span>}
@@ -83,19 +83,19 @@ export const CategoryNameNav: React.FC<CategoryNameNavProps> = ({
         {/* Right Scroll Button (Desktop) */}
         <button
           onClick={() => scroll('right')}
-          className="hidden sm:flex items-center justify-center w-8 h-8 rounded-full bg-white text-neutral-600 hover:text-neutral-950 hover:bg-neutral-100 shadow-xs border border-neutral-200 shrink-0 mx-1 z-10 transition"
+          className="hidden sm:flex items-center justify-center w-7 h-7 rounded-lg bg-white text-stone-600 hover:text-stone-900 hover:bg-stone-100 shadow-2xs border border-stone-200 shrink-0 mx-1 z-10 transition-colors cursor-pointer"
           aria-label="Scroll right"
         >
-          <ChevronRight className="w-4 h-4" />
+          <ChevronRight className="w-3.5 h-3.5" />
         </button>
 
-        {/* Optional View All Pill */}
+        {/* View All */}
         {onViewAll && (
           <button
             onClick={onViewAll}
-            className="hidden md:flex items-center gap-1 text-[11px] font-bold text-rose-600 hover:text-rose-700 px-3 py-1.5 rounded-full bg-rose-50 hover:bg-rose-100/80 shrink-0 mr-2 border border-rose-200/60 transition"
+            className="hidden md:flex items-center gap-1 text-xs font-medium text-stone-700 hover:text-stone-900 px-3 py-1.5 rounded-lg bg-stone-50 hover:bg-stone-100 shrink-0 mr-2 border border-stone-200 transition-colors cursor-pointer"
           >
-            <Sparkles className="w-3 h-3" />
+            <Sparkles className="w-3 h-3 text-stone-500" />
             <span>All Categories</span>
           </button>
         )}

@@ -49,28 +49,28 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="text-xl font-bold text-neutral-900 font-brand">
+            <h2 className="text-xl font-serif font-bold text-stone-900">
               Customer Rental History
             </h2>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-100 text-rose-700">
-              Nashik Fleet 📍
+            <span className="text-xs text-stone-500 font-medium">
+              Nashik Fleet
             </span>
           </div>
-          <p className="text-xs text-neutral-500 mt-0.5">
+          <p className="text-xs text-stone-500 mt-0.5">
             Active fitting deliveries, event timelines, and 100% security deposit escrow returns
           </p>
         </div>
 
         {/* Tab Filters */}
-        <div className="flex items-center gap-1.5 bg-neutral-100 p-1 rounded-2xl border border-neutral-200">
+        <div className="flex items-center gap-1 bg-stone-100 p-1 rounded-lg border border-stone-200">
           {(['all', 'active', 'completed'] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setSelectedTab(tab)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition capitalize ${
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors capitalize cursor-pointer ${
                 selectedTab === tab
-                  ? 'bg-white text-rose-600 shadow-xs'
-                  : 'text-neutral-600 hover:text-neutral-900'
+                  ? 'bg-white text-stone-900 shadow-2xs font-semibold'
+                  : 'text-stone-600 hover:text-stone-900'
               }`}
             >
               {tab === 'all' ? `All (${orders.length})` : tab === 'active' ? 'Active' : 'Completed'}
@@ -278,19 +278,19 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
             </div>
 
             {/* Action Bar */}
-            <div className="pt-2 border-t border-neutral-100 flex items-center justify-between">
+            <div className="pt-2 border-t border-stone-200 flex items-center justify-between">
               <button
                 onClick={() => setSelectedInvoiceOrder(order)}
-                className="px-3 py-1.5 rounded-xl border border-neutral-200 text-xs font-bold text-neutral-700 hover:bg-neutral-100 flex items-center gap-1.5 transition"
+                className="px-3 py-1.5 rounded-lg border border-stone-300 text-xs font-medium text-stone-700 hover:bg-stone-50 flex items-center gap-1.5 transition-colors cursor-pointer"
               >
-                <FileText className="w-3.5 h-3.5 text-rose-500" />
+                <FileText className="w-3.5 h-3.5 text-stone-600" />
                 <span>Invoice / Agreement</span>
               </button>
 
               {order.status === 'completed' && onRentAgain && (
                 <button
                   onClick={() => onRentAgain(order.product)}
-                  className="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition flex items-center gap-1"
+                  className="px-3.5 py-1.5 rounded-lg bg-stone-900 hover:bg-stone-800 text-white text-xs font-medium transition-colors flex items-center gap-1.5 cursor-pointer"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                   <span>Rent Again</span>

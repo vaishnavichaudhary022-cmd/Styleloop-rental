@@ -27,8 +27,8 @@ import { BottomNavBar } from './components/BottomNavBar';
 import { DeliveryConfirmationModal } from './components/DeliveryConfirmationModal';
 
 import { DRESS_PRODUCTS, DEMO_USERS, INITIAL_ADDRESSES, SAMPLE_RENTAL_ORDERS } from './data/rentalData';
-import { CategoryId, DressProduct, CartItem, TargetGender, User, Address, RentalDuration, Role, RentalOrder, ActiveTab } from './types/rental';
-import { Check, Sparkles, Heart, Store, Shield, User as UserIcon, LogOut, Package } from 'lucide-react';
+import { CategoryId, DressProduct, CartItem, TargetGender, User, Address, RentalDuration, Role, RentalOrder, ActiveTab, RentalOrderStatus } from './types/rental';
+import { Check, Sparkles, Heart } from 'lucide-react';
 
 export default function App() {
   // Authentication & Role state
@@ -150,6 +150,66 @@ export default function App() {
     showToast('Item removed from Rental Bag');
   };
 
+  // Handle adding new dress to catalog (Admin & Boutique)
+  const handleAddNewProduct = (newProduct: DressProduct) => {
+    setProductsList((prev) => [newProduct, ...prev]);
+    showToast(`"${newProduct.name}" added to live catalog!`, 'sparkles');
+  };
+
+  // Handle removing dress from catalog (Admin action)
+  const handleDeleteProduct = (productId: string) => {
+    const prod = productsList.find((p) => p.id === productId);
+    setProductsList((prev) => prev.filter((p) => p.id !== productId));
+    showToast(`"${prod?.name || 'Dress'}" removed from catalog`, 'check');
+  };
+
+  // Handle rental order status update (e.g. marking returned & refunding deposit)
+  const handleUpdateOrderStatus = (
+    orderId: string,
+    newStatus: RentalOrderStatus,
+    depositStatus?: 'held' | 'refunded'
+  ) => {
+    setRentalOrders((prev) =>
+      prev.map((ord) => {
+        if (ord.id !== orderId) return ord;
+        const statusLabel =
+          newStatus === 'completed'
+            ? 'Completed · 100% Deposit Refunded'
+            : newStatus === 'returned_inspected'
+            ? 'Returned & Inspected · Deposit Processing'
+            : newStatus === 'with_customer'
+            ? 'Delivered · In Customer Wardrobe'
+            : newStatus === 'out_for_delivery'
+            ? 'Out for Delivery to Customer'
+            : ord.statusLabel;
+
+        const updatedSteps = [...ord.steps];
+        if (newStatus === 'completed') {
+          updatedSteps.push({
+            title: '100% Security Deposit Refunded',
+            desc: `₹${ord.securityDeposit.toLocaleString('en-IN')} credited to original payment method. Order completed.`,
+            date: 'Today',
+            done: true,
+          });
+        }
+
+        return {
+          ...ord,
+          status: newStatus,
+          statusLabel,
+          depositStatus: depositStatus || (newStatus === 'completed' ? 'refunded' : ord.depositStatus),
+          steps: updatedSteps,
+        };
+      })
+    );
+    showToast(
+      newStatus === 'completed'
+        ? `Order ${orderId} marked returned and deposit refunded!`
+        : `Order status updated to ${newStatus}`,
+      'check'
+    );
+  };
+
   // Filtered & Sorted products
   const displayedProducts = useMemo(() => {
     let list = [...productsList];
@@ -241,7 +301,7 @@ export default function App() {
   // FIRST PAGE: Login Page if not logged in
   if (!isLoggedIn) {
     return (
-      <div className="min-h-screen bg-neutral-950 font-sans selection:bg-rose-500 selection:text-white">
+      <div className="min-h-screen bg-[#FAF9F6] text-stone-900 font-sans selection:bg-stone-900 selection:text-white">
         <LoginPage
           onLoginSuccess={(user) => {
             handleLoginSuccess(user);
@@ -254,7 +314,7 @@ export default function App() {
         />
         {toast && (
           <div className="fixed bottom-6 right-6 z-50 flex pointer-events-none animate-in fade-in slide-in-from-bottom-3 duration-200">
-            <div className="bg-neutral-900 text-white text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-2xl shadow-xl border border-white/15 flex items-center gap-2.5 backdrop-blur-md max-w-md">
+            <div className="bg-stone-900 text-stone-100 text-xs sm:text-sm font-medium px-4 py-2.5 rounded-xl shadow-xl border border-stone-800 flex items-center gap-2.5 backdrop-blur-md max-w-md">
               {toast.icon === 'heart' && <Heart className="w-4 h-4 text-rose-400 fill-rose-400 shrink-0" />}
               {toast.icon === 'sparkles' && <Sparkles className="w-4 h-4 text-amber-300 shrink-0" />}
               {toast.icon === 'check' && <Check className="w-4 h-4 text-emerald-400 stroke-[3] shrink-0" />}
@@ -267,90 +327,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-50 text-neutral-900 flex flex-col font-sans selection:bg-rose-500 selection:text-white">
-      {/* Top Role Switcher Notification Bar */}
-      <div className="bg-neutral-900 text-neutral-300 text-xs py-2 px-4 sm:px-8 border-b border-neutral-800">
-        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-white font-semibold">Active Mode:</span>
-            <span className="bg-neutral-800 px-2.5 py-0.5 rounded-md font-bold text-rose-400 capitalize">
-              {activePortal === 'customer'
-                ? 'Customer Storefront (Rent Dresses)'
-                : activePortal === 'shop'
-                ? 'Shop Owner / Boutique Portal'
-                : 'Master Admin Console'}
-            </span>
-            <span className="hidden md:inline text-neutral-400">
-              · Logged in as <strong className="text-white">{currentUser.name}</strong>
-            </span>
-          </div>
-
-          {/* 1-Click Role Switcher Quick Links */}
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] text-neutral-400 hidden sm:inline">Switch Portal:</span>
-            <button
-              onClick={() => {
-                setActivePortal('customer');
-                showToast('Switched to Customer Storefront', 'sparkles');
-              }}
-              className={`px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
-                activePortal === 'customer'
-                  ? 'bg-rose-600 text-white shadow-xs'
-                  : 'bg-neutral-800 text-neutral-300 hover:text-white'
-              }`}
-            >
-              <UserIcon className="w-3 h-3" /> Customer
-            </button>
-            <button
-              onClick={() => {
-                setActivePortal('shop');
-                showToast('Switched to Shop Owner Portal', 'check');
-              }}
-              className={`px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
-                activePortal === 'shop'
-                  ? 'bg-rose-600 text-white shadow-xs'
-                  : 'bg-neutral-800 text-neutral-300 hover:text-white'
-              }`}
-            >
-              <Store className="w-3 h-3" /> Shop Owner
-            </button>
-            <button
-              onClick={() => {
-                setActivePortal('admin');
-                showToast('Switched to Admin Console', 'check');
-              }}
-              className={`px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
-                activePortal === 'admin'
-                  ? 'bg-rose-600 text-white shadow-xs'
-                  : 'bg-neutral-800 text-neutral-300 hover:text-white'
-              }`}
-            >
-              <Shield className="w-3 h-3" /> Admin
-            </button>
-            <button
-              onClick={() => {
-                setAuthInitialRole('customer');
-                setAuthModalOpen(true);
-              }}
-              className="ml-1 text-rose-400 hover:text-rose-300 text-xs font-semibold underline underline-offset-2"
-            >
-              Change Account
-            </button>
-            <button
-              onClick={() => {
-                setIsLoggedIn(false);
-                showToast('Logged out to login page');
-              }}
-              className="ml-2 px-2 py-1 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white text-xs font-semibold flex items-center gap-1 transition"
-              title="Return to Login Page"
-            >
-              <LogOut className="w-3 h-3 text-rose-400" /> Log Out
-            </button>
-          </div>
-        </div>
-      </div>
-
+    <div className="min-h-screen bg-[#FAF9F6] text-stone-900 flex flex-col font-sans selection:bg-stone-900 selection:text-white">
       {/* Main Website Header */}
       <TopNavBar
         currentUser={currentUser}
@@ -486,6 +463,10 @@ export default function App() {
           <AdminPortal
             currentUser={currentUser}
             products={productsList}
+            rentalOrders={rentalOrders}
+            onAddNewProduct={handleAddNewProduct}
+            onDeleteProduct={handleDeleteProduct}
+            onUpdateOrderStatus={handleUpdateOrderStatus}
             onSwitchToCustomerView={() => setActivePortal('customer')}
           />
         )}

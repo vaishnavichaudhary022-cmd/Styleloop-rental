@@ -87,16 +87,16 @@ export const ShopOwnerPortal: React.FC<ShopOwnerPortalProps> = ({
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Header */}
-      <div className="bg-gradient-to-r from-neutral-900 via-neutral-950 to-neutral-900 rounded-3xl p-6 sm:p-8 text-white flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-xl border border-neutral-800">
+      <div className="bg-white rounded-2xl p-6 sm:p-8 text-stone-900 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-xs border border-stone-200">
         <div>
-          <div className="inline-flex items-center gap-2 bg-rose-500/20 text-rose-300 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2 border border-rose-500/30">
-            <Store className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center gap-2 bg-stone-100 text-stone-700 px-3 py-1 rounded-md text-xs font-medium uppercase tracking-wider mb-2 border border-stone-200">
+            <Store className="w-3.5 h-3.5 text-stone-800" />
             Verified Boutique Partner
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black font-brand">
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-stone-900">
             {user.shopName || 'Singhania Heritage Couturiers'}
           </h1>
-          <p className="text-xs sm:text-sm text-neutral-400 mt-1">
+          <p className="text-xs sm:text-sm text-stone-500 mt-1">
             Managed by {user.name} · {user.shopCity || 'Mumbai & Delhi'} · Boutique Vendor ID #SHOP-8841
           </p>
         </div>
@@ -104,14 +104,14 @@ export const ShopOwnerPortal: React.FC<ShopOwnerPortalProps> = ({
         <div className="flex items-center gap-3 flex-wrap">
           <button
             onClick={() => setShowAddModal(true)}
-            className="py-2.5 px-5 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-lg shadow-rose-500/20 flex items-center gap-2 transition active:scale-95"
+            className="py-2.5 px-4 bg-stone-900 hover:bg-stone-800 text-white rounded-lg text-xs sm:text-sm font-medium shadow-xs flex items-center gap-2 transition cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             List New Rental Dress
           </button>
           <button
             onClick={onSwitchToCustomerView}
-            className="py-2.5 px-4 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs sm:text-sm font-bold transition"
+            className="py-2.5 px-4 bg-white hover:bg-stone-50 text-stone-800 border border-stone-300 rounded-lg text-xs sm:text-sm font-medium transition cursor-pointer"
           >
             View Customer Storefront
           </button>

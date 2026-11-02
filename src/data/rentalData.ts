@@ -18,7 +18,7 @@ export const realLifeChampagnePartyImg = 'https://images.unsplash.com/photo-1572
 export const realLifeMensDiwaliKurtaImg = 'https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?auto=format&fit=crop&w=800&q=85';
 export const realLifeKidsDiwaliKurtaImg = 'https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?auto=format&fit=crop&w=800&q=85';
 export const realLifeKidsBoySherwaniImg = 'https://upload.wikimedia.org/wikipedia/commons/4/40/Boy_wearing_traditional_attire.jpg';
-export const realLifeKidsPrincessBallGownImg = 'https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=800&q=85';
+export const realLifeKidsPrincessBallGownImg = 'https://upload.wikimedia.org/wikipedia/commons/5/55/The_Forlorn_Fairy_%2868943671%29.jpeg';
 export const realLifeKidsKrishnaCostumeImg = 'https://upload.wikimedia.org/wikipedia/commons/a/ab/Male_child_dressed_alike_sree_Krishna.jpg';
 export const realLifeKidsSuperheroImg = 'https://upload.wikimedia.org/wikipedia/commons/c/c0/Superhero_kids.jpg';
 
@@ -1181,7 +1181,7 @@ export const DRESS_PRODUCTS: DressProduct[] = [
     rating: 4.99,
     reviewCount: 410,
     rentedCount: 860,
-    image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=800&q=85',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/2/20/Child_dressed_as_Shivaji_Maharaj.jpg',
     sizes: ['3-5 Y', '6-8 Y', '9-12 Y'],
     color: 'Royal Saffron, Crimson & Gold Brocade',
     tag: 'Historical Winner',
@@ -1290,7 +1290,7 @@ export const DRESS_PRODUCTS: DressProduct[] = [
     rating: 4.97,
     reviewCount: 310,
     rentedCount: 690,
-    image: 'https://upload.wikimedia.org/wikipedia/commons/b/b5/Santa-eop2.jpg',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/e/ed/Customsuit.jpg',
     sizes: ['3-5 Y', '6-8 Y', '9-12 Y'],
     color: 'Crimson Velvet & Snow White Fur',
     tag: 'Christmas Favorite',
@@ -1344,7 +1344,7 @@ export const DRESS_PRODUCTS: DressProduct[] = [
     rating: 4.95,
     reviewCount: 190,
     rentedCount: 390,
-    image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=85',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/6/65/Flower_girl_in_tutu_dress_and_lace_leotard_with_grandfather.jpg',
     sizes: ['3-4 Y', '5-6 Y', '7-8 Y', '9-10 Y'],
     color: 'Glitter Rose Pink & Silver Tiara',
     tag: 'Fairy Tale Theme',

@@ -64,14 +64,14 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
                 <Icon
                   className={`w-5 h-5 transition-all duration-200 ${
                     isActive
-                      ? 'text-rose-600 stroke-[2.4] scale-110'
-                      : 'text-neutral-500 group-hover:text-neutral-800 stroke-[1.8]'
+                      ? 'text-stone-900 stroke-[2.4] scale-105'
+                      : 'text-stone-500 group-hover:text-stone-800 stroke-[1.8]'
                   }`}
                 />
 
                 {/* Badge indicator */}
                 {tab.badge !== undefined && tab.badge > 0 && (
-                  <span className="absolute -top-1.5 -right-2.5 min-w-[15px] h-[15px] px-0.5 bg-rose-500 text-white text-[9px] font-black rounded-full flex items-center justify-center ring-2 ring-white">
+                  <span className="absolute -top-1.5 -right-2.5 min-w-[15px] h-[15px] px-0.5 bg-stone-900 text-white text-[9px] font-bold rounded-full flex items-center justify-center ring-2 ring-white">
                     {tab.badge}
                   </span>
                 )}
@@ -81,8 +81,8 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
               <span
                 className={`text-[10px] mt-1 tracking-tight font-medium transition-colors ${
                   isActive
-                    ? 'text-rose-600 font-bold'
-                    : 'text-neutral-500 group-hover:text-neutral-800'
+                    ? 'text-stone-900 font-semibold'
+                    : 'text-stone-500 group-hover:text-stone-800'
                 }`}
               >
                 {tab.label}
@@ -90,7 +90,7 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
 
               {/* Active Dot */}
               {isActive && (
-                <span className="w-1 h-1 rounded-full bg-rose-600 mt-0.5" />
+                <span className="w-1 h-1 rounded-full bg-stone-900 mt-0.5" />
               )}
             </button>
           );

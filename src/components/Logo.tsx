@@ -148,8 +148,8 @@ export const Logo: React.FC<LogoProps> = ({
         </div>
 
         {/* Floating Faceted Gold Star Dot */}
-        <span className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-gradient-to-tr from-amber-300 to-yellow-100 rounded-full border border-white shadow-xs flex items-center justify-center z-10 pointer-events-none">
-          <span className="w-1.5 h-1.5 bg-amber-600 rounded-full animate-ping opacity-75"></span>
+        <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-amber-400 rounded-full border border-white shadow-xs flex items-center justify-center z-10 pointer-events-none">
+          <span className="w-1 h-1 bg-amber-700 rounded-full"></span>
         </span>
       </div>
 
@@ -159,37 +159,37 @@ export const Logo: React.FC<LogoProps> = ({
           <span
             className={`font-serif tracking-[0.14em] font-black transition-all ${
               isLogin
-                ? 'text-2xl sm:text-3xl text-neutral-900 drop-shadow-2xs'
+                ? 'text-2xl sm:text-3xl text-stone-900 drop-shadow-2xs'
                 : isFooter
-                ? 'text-2xl text-white'
+                ? 'text-xl sm:text-2xl text-stone-900'
                 : isInvoice
-                ? 'text-2xl text-neutral-900'
-                : 'text-xl sm:text-[23px] text-neutral-950 group-hover:text-rose-600'
+                ? 'text-2xl text-stone-900'
+                : 'text-xl sm:text-[23px] text-stone-900 group-hover:text-stone-700'
             }`}
             style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
           >
             REVOGUE
           </span>
 
-          {/* Ruby Diamond Gem Separator */}
-          <span className="w-1.5 h-1.5 rotate-45 bg-gradient-to-tr from-rose-600 to-amber-500 ring-2 ring-rose-200 shrink-0 self-center"></span>
+          {/* Luxury Gem Separator */}
+          <span className="w-1.5 h-1.5 rotate-45 bg-stone-800 ring-2 ring-stone-200 shrink-0 self-center"></span>
         </div>
 
         {/* Subtitle Badge with Nashik Fleet Indicator */}
         {!isCompact && (
           <div className="flex items-center gap-1.5 mt-1">
             <span
-              className={`text-[8.5px] font-black uppercase tracking-[0.24em] ${
+              className={`text-[8.5px] font-bold uppercase tracking-[0.24em] ${
                 isFooter
-                  ? 'text-amber-300'
+                  ? 'text-stone-600'
                   : isLogin
-                  ? 'text-rose-700 font-extrabold'
-                  : 'text-rose-600 font-extrabold'
+                  ? 'text-stone-700'
+                  : 'text-stone-600'
               }`}
             >
               Haute Couture Rentals
             </span>
-            <span className="text-[7.5px] font-black uppercase tracking-wider px-1.5 py-0.2 rounded-full bg-gradient-to-r from-amber-500/15 to-rose-500/15 text-amber-900 border border-amber-300/50 shadow-2xs">
+            <span className="text-[8px] font-medium uppercase tracking-wider px-1.5 py-0.2 rounded-md bg-stone-100 text-stone-700 border border-stone-200 shadow-2xs">
               Nashik ✦
             </span>
           </div>

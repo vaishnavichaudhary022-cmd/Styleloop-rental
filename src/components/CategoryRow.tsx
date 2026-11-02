@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { FESTIVAL_CATEGORIES, OCCASION_CATEGORIES, CATEGORIES } from '../data/rentalData';
 import { CategoryId, Category } from '../types/rental';
-import { Sparkles, Calendar, PartyPopper, Check, X, Filter, ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
+import { Sparkles, Calendar, PartyPopper, Check, X, ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 
 interface CategoryRowProps {
   selectedCategory: CategoryId;
@@ -41,60 +41,60 @@ export const CategoryRow: React.FC<CategoryRowProps> = ({
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 pb-3">
       {/* Categories Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3.5 pb-2.5 border-b border-neutral-100">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3.5 pb-2.5 border-b border-stone-200/80">
         <div>
           <div className="flex items-center gap-2.5">
-            <h2 className="text-xl sm:text-2xl font-black text-neutral-900 font-brand tracking-tight">
+            <h2 className="text-xl sm:text-2xl font-serif font-bold text-stone-900 tracking-tight">
               Categories
             </h2>
-            <span className="text-[10px] text-rose-600 font-extrabold bg-rose-50 border border-rose-200/80 px-2 py-0.5 rounded-full flex items-center gap-1">
-              <Sparkles className="w-2.5 h-2.5" /> 13 Curated Styles
+            <span className="text-xs text-stone-500 font-medium">
+              13 Curated Collections
             </span>
           </div>
-          <p className="text-xs text-neutral-500 mt-0.5 hidden sm:block">
+          <p className="text-xs text-stone-600 mt-0.5 hidden sm:block">
             Find designer outfits for festivals, weddings, engagements & celebrations
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5 self-start sm:self-auto flex-wrap">
-          {/* Segmented Filter Toggle: All vs Festivals vs Occasions */}
-          <div className="flex items-center gap-1 p-1 bg-neutral-100 rounded-xl border border-neutral-200/60">
+        <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
+          {/* Segmented Filter Toggle */}
+          <div className="flex items-center gap-1 p-1 bg-stone-100 rounded-lg border border-stone-200">
             <button
               onClick={() => setActiveTab('all')}
-              className={`px-2.5 sm:px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
+              className={`px-3 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer ${
                 activeTab === 'all'
-                  ? 'bg-white text-neutral-900 shadow-2xs'
-                  : 'text-neutral-600 hover:text-neutral-950'
+                  ? 'bg-white text-stone-900 shadow-2xs font-semibold'
+                  : 'text-stone-600 hover:text-stone-900'
               }`}
             >
               <span>All</span>
-              <span className="text-[10px] text-neutral-400">({CATEGORIES.length})</span>
+              <span className="text-[10px] text-stone-400 ml-1">({CATEGORIES.length})</span>
             </button>
             <button
               onClick={() => setActiveTab('festivals')}
-              className={`px-2.5 sm:px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
+              className={`px-3 py-1 rounded-md text-xs font-medium transition-colors flex items-center gap-1 cursor-pointer ${
                 activeTab === 'festivals'
-                  ? 'bg-gradient-to-r from-rose-600 to-purple-600 text-white shadow-2xs'
-                  : 'text-neutral-600 hover:text-neutral-950'
+                  ? 'bg-stone-900 text-white shadow-2xs font-semibold'
+                  : 'text-stone-600 hover:text-stone-900'
               }`}
             >
               <PartyPopper className="w-3 h-3" />
               <span>Festivals</span>
-              <span className={activeTab === 'festivals' ? 'text-rose-100 text-[10px]' : 'text-neutral-400 text-[10px]'}>
+              <span className={`text-[10px] ml-0.5 ${activeTab === 'festivals' ? 'text-stone-300' : 'text-stone-400'}`}>
                 (4)
               </span>
             </button>
             <button
               onClick={() => setActiveTab('occasions')}
-              className={`px-2.5 sm:px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
+              className={`px-3 py-1 rounded-md text-xs font-medium transition-colors flex items-center gap-1 cursor-pointer ${
                 activeTab === 'occasions'
-                  ? 'bg-neutral-900 text-white shadow-2xs'
-                  : 'text-neutral-600 hover:text-neutral-950'
+                  ? 'bg-stone-900 text-white shadow-2xs font-semibold'
+                  : 'text-stone-600 hover:text-stone-900'
               }`}
             >
               <Calendar className="w-3 h-3" />
               <span>Occasions</span>
-              <span className={activeTab === 'occasions' ? 'text-neutral-300 text-[10px]' : 'text-neutral-400 text-[10px]'}>
+              <span className={`text-[10px] ml-0.5 ${activeTab === 'occasions' ? 'text-stone-300' : 'text-stone-400'}`}>
                 (9)
               </span>
             </button>
@@ -104,8 +104,7 @@ export const CategoryRow: React.FC<CategoryRowProps> = ({
           {onViewAllCategories && (
             <button
               onClick={onViewAllCategories}
-              className="hidden md:flex items-center gap-1 text-xs font-bold text-rose-600 hover:text-rose-700 bg-rose-50/70 hover:bg-rose-100/70 px-2.5 py-1.5 rounded-xl border border-rose-200/70 transition"
-              title="Browse all category collections in full page view"
+              className="hidden md:flex items-center gap-1 text-xs font-medium text-stone-700 hover:text-stone-900 bg-white hover:bg-stone-50 px-3 py-1.5 rounded-lg border border-stone-200 transition-colors cursor-pointer"
             >
               <span>View All</span>
               <ArrowRight className="w-3 h-3" />
@@ -116,14 +115,14 @@ export const CategoryRow: React.FC<CategoryRowProps> = ({
           <div className="hidden sm:flex items-center gap-1">
             <button
               onClick={() => handleScroll('left')}
-              className="p-1.5 rounded-lg border border-neutral-200 bg-white hover:bg-neutral-50 text-neutral-600 transition shadow-2xs active:scale-95"
+              className="p-1.5 rounded-lg border border-stone-200 bg-white hover:bg-stone-50 text-stone-600 transition-colors shadow-2xs active:scale-95 cursor-pointer"
               aria-label="Scroll left"
             >
               <ChevronLeft className="w-3.5 h-3.5" />
             </button>
             <button
               onClick={() => handleScroll('right')}
-              className="p-1.5 rounded-lg border border-neutral-200 bg-white hover:bg-neutral-50 text-neutral-600 transition shadow-2xs active:scale-95"
+              className="p-1.5 rounded-lg border border-stone-200 bg-white hover:bg-stone-50 text-stone-600 transition-colors shadow-2xs active:scale-95 cursor-pointer"
               aria-label="Scroll right"
             >
               <ChevronRight className="w-3.5 h-3.5" />
@@ -132,71 +131,71 @@ export const CategoryRow: React.FC<CategoryRowProps> = ({
         </div>
       </div>
 
-      {/* Active Category Banner Indicator if a filter is chosen */}
+      {/* Active Category Indicator Banner */}
       {selectedCategory !== 'all' && selectedCategoryObj && (
-        <div className="mb-3 px-3 py-2 bg-gradient-to-r from-rose-50 via-pink-50 to-amber-50 border border-rose-200/90 rounded-2xl flex items-center justify-between gap-2 shadow-2xs animate-fadeIn">
+        <div className="mb-3 px-3.5 py-2 bg-[#F5F4EE] border border-stone-200 rounded-xl flex items-center justify-between gap-2 shadow-2xs">
           <div className="flex items-center gap-2 truncate">
             <span className="text-base">{selectedCategoryObj.iconEmoji || '✨'}</span>
-            <div className="text-xs">
-              <span className="font-semibold text-neutral-600">Active Category: </span>
-              <strong className="text-rose-700 font-extrabold uppercase tracking-wide">
+            <div className="text-xs text-stone-700">
+              <span>Active Category: </span>
+              <strong className="text-stone-900 font-semibold uppercase tracking-wide">
                 {selectedCategoryObj.name}
               </strong>
-              <span className="text-neutral-400 text-[11px] ml-1.5 hidden sm:inline">
+              <span className="text-stone-500 text-[11px] ml-1.5 hidden sm:inline">
                 ({selectedCategoryObj.itemCount}+ outfits available in Nashik)
               </span>
             </div>
           </div>
           <button
             onClick={() => onSelectCategory('all')}
-            className="flex items-center gap-1 text-[11px] font-bold text-rose-600 hover:text-rose-800 bg-white px-2.5 py-1 rounded-lg border border-rose-200 shadow-2xs transition active:scale-95 shrink-0"
+            className="flex items-center gap-1 text-xs font-medium text-stone-800 hover:text-stone-950 bg-white px-2.5 py-1 rounded-md border border-stone-200 shadow-2xs transition-colors cursor-pointer shrink-0"
           >
             <X className="w-3 h-3" /> Clear Filter
           </button>
         </div>
       )}
 
-      {/* Horizontal Scrollable Row of Circular Category Avatars */}
+      {/* Horizontal Scrollable Row of Category Avatars */}
       <div
         ref={scrollContainerRef}
-        className="flex items-start gap-3.5 sm:gap-5 overflow-x-auto no-scrollbar py-2 scroll-smooth"
+        className="flex items-start gap-4 sm:gap-6 overflow-x-auto no-scrollbar py-2 scroll-smooth"
       >
         {/* All Fits Option */}
         <button
           onClick={() => onSelectCategory('all')}
-          className="flex flex-col items-center shrink-0 group focus:outline-none transition transform active:scale-95"
+          className="flex flex-col items-center shrink-0 group focus:outline-none transition active:scale-95 cursor-pointer"
         >
           <div className="relative">
             <div
-              className={`w-16 h-16 sm:w-20 sm:h-20 rounded-full p-[2.5px] transition-all duration-300 ${
+              className={`w-16 h-16 sm:w-20 sm:h-20 rounded-full p-[2px] transition-all duration-200 ${
                 selectedCategory === 'all'
-                  ? 'bg-gradient-to-tr from-rose-500 via-pink-500 to-amber-400 ring-4 ring-rose-400/30 scale-105 shadow-md'
-                  : 'bg-gradient-to-tr from-neutral-200 via-neutral-300 to-neutral-200 group-hover:from-rose-400 group-hover:to-pink-500 group-hover:scale-105'
+                  ? 'ring-2 ring-stone-900 ring-offset-2 scale-102 shadow-xs'
+                  : 'ring-1 ring-stone-200 group-hover:ring-stone-400'
               }`}
             >
-              <div className="w-full h-full rounded-full overflow-hidden bg-neutral-900 ring-2 ring-white flex flex-col items-center justify-center text-white">
-                <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-amber-300 mb-0.5" />
-                <span className="text-[9px] font-black uppercase tracking-wider text-neutral-200">
+              <div className="w-full h-full rounded-full overflow-hidden bg-stone-900 flex flex-col items-center justify-center text-white">
+                <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-stone-300 mb-0.5" />
+                <span className="text-[10px] font-medium uppercase tracking-wider text-stone-200">
                   All
                 </span>
               </div>
             </div>
             {selectedCategory === 'all' && (
-              <span className="absolute -top-1 -right-1 bg-emerald-500 text-white rounded-full p-0.5 ring-2 ring-white">
+              <span className="absolute -top-0.5 -right-0.5 bg-stone-900 text-white rounded-full p-0.5 ring-2 ring-white">
                 <Check className="w-2.5 h-2.5 stroke-[3]" />
               </span>
             )}
           </div>
           <span
-            className={`mt-2 text-xs sm:text-sm text-center font-bold tracking-tight transition-colors ${
+            className={`mt-2 text-xs sm:text-sm text-center font-medium transition-colors ${
               selectedCategory === 'all'
-                ? 'text-rose-600'
-                : 'text-neutral-700 group-hover:text-neutral-950'
+                ? 'text-stone-900 font-semibold'
+                : 'text-stone-700 group-hover:text-stone-900'
             }`}
           >
-            All Fits
+            All Outfits
           </span>
-          <span className="text-[10px] text-neutral-400">All Outfits</span>
+          <span className="text-[10px] text-stone-400">All Collections</span>
         </button>
 
         {displayedCategories.map((cat) => {
@@ -206,23 +205,23 @@ export const CategoryRow: React.FC<CategoryRowProps> = ({
             <button
               key={cat.id}
               onClick={() => onSelectCategory(isSelected ? 'all' : cat.id)}
-              className="flex flex-col items-center shrink-0 group focus:outline-none transition transform active:scale-95"
+              className="flex flex-col items-center shrink-0 group focus:outline-none transition active:scale-95 cursor-pointer"
             >
-              {/* Circular Avatar Container with Gradient Border */}
+              {/* Circular Avatar Container */}
               <div className="relative">
                 <div
-                  className={`w-16 h-16 sm:w-20 sm:h-20 rounded-full p-[2.5px] transition-all duration-300 ${
+                  className={`w-16 h-16 sm:w-20 sm:h-20 rounded-full p-[2px] transition-all duration-200 ${
                     isSelected
-                      ? 'bg-gradient-to-tr from-rose-500 via-pink-500 to-amber-400 ring-4 ring-rose-400/30 scale-105 shadow-md'
-                      : 'bg-gradient-to-tr from-neutral-200 via-rose-200 to-pink-200 group-hover:from-rose-400 group-hover:to-pink-500 group-hover:scale-105'
+                      ? 'ring-2 ring-stone-900 ring-offset-2 scale-102 shadow-xs'
+                      : 'ring-1 ring-stone-200 group-hover:ring-stone-400'
                   }`}
                 >
-                  <div className="w-full h-full rounded-full overflow-hidden bg-neutral-100 ring-2 ring-white">
+                  <div className="w-full h-full rounded-full overflow-hidden bg-stone-100">
                     <img
                       src={cat.image}
                       alt={cat.name}
                       referrerPolicy="no-referrer"
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       onError={(e) => {
                         const target = e.currentTarget;
                         if (!target.src.endsWith('/assets/fallback-dress.svg')) {
@@ -235,20 +234,14 @@ export const CategoryRow: React.FC<CategoryRowProps> = ({
 
                 {/* Badge on circle */}
                 {cat.badge && (
-                  <span
-                    className={`absolute -top-1 -right-1 text-white text-[8px] font-black px-1.5 py-0.2 rounded-full uppercase tracking-tighter shadow-xs ${
-                      cat.group === 'festival'
-                        ? 'bg-gradient-to-r from-purple-600 to-rose-600'
-                        : 'bg-gradient-to-r from-rose-600 to-amber-500'
-                    }`}
-                  >
+                  <span className="absolute -top-1 -right-1 bg-stone-900 text-white text-[8px] font-medium px-1.5 py-0.5 rounded shadow-xs uppercase tracking-wider">
                     {cat.badge}
                   </span>
                 )}
 
                 {/* Selected Check Icon */}
                 {isSelected && (
-                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-rose-600 text-white rounded-full p-0.5 ring-2 ring-white">
+                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-stone-900 text-white rounded-full p-0.5 ring-2 ring-white">
                     <Check className="w-2.5 h-2.5 stroke-[3]" />
                   </span>
                 )}
@@ -256,58 +249,19 @@ export const CategoryRow: React.FC<CategoryRowProps> = ({
 
               {/* Label below circle */}
               <span
-                className={`mt-2 text-xs sm:text-sm text-center transition-colors font-bold tracking-tight flex items-center gap-1 ${
+                className={`mt-2 text-xs sm:text-sm text-center transition-colors font-medium ${
                   isSelected
-                    ? 'text-rose-600'
-                    : 'text-neutral-700 group-hover:text-neutral-950'
+                    ? 'text-stone-900 font-semibold'
+                    : 'text-stone-700 group-hover:text-stone-900'
                 }`}
               >
-                <span>{cat.name}</span>
+                {cat.name}
               </span>
 
               {/* Subtitle / item count */}
-              <span className="text-[10px] text-neutral-400 group-hover:text-neutral-500">
+              <span className="text-[10px] text-stone-400 group-hover:text-stone-500">
                 {cat.itemCount} fits
               </span>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Quick Category Chips for 1-click Filter Navigation */}
-      <div className="mt-2.5 pt-2 border-t border-neutral-100 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
-        <span className="text-[10px] uppercase font-extrabold text-neutral-400 shrink-0 flex items-center gap-1">
-          <Filter className="w-2.5 h-2.5" /> Quick Filter:
-        </span>
-        {[
-          { id: 'all' as CategoryId, label: 'All Fits', icon: '✨' },
-          { id: 'diwali' as CategoryId, label: 'Diwali', icon: '🪔' },
-          { id: 'navratri' as CategoryId, label: 'Navratri', icon: '💃' },
-          { id: 'eid' as CategoryId, label: 'Eid', icon: '🌙' },
-          { id: 'christmas' as CategoryId, label: 'Christmas', icon: '🎄' },
-          { id: 'wedding' as CategoryId, label: 'Wedding', icon: '👰' },
-          { id: 'engagement' as CategoryId, label: 'Engagement', icon: '💍' },
-          { id: 'reception' as CategoryId, label: 'Reception', icon: '✨' },
-          { id: 'haldi' as CategoryId, label: 'Haldi', icon: '🌼' },
-          { id: 'mehendi' as CategoryId, label: 'Mehendi', icon: '🌿' },
-          { id: 'sangeet' as CategoryId, label: 'Sangeet', icon: '🎶' },
-          { id: 'party' as CategoryId, label: 'Party Wear', icon: '🍸' },
-          { id: 'birthday' as CategoryId, label: 'Birthday', icon: '🎂' },
-          { id: 'casual' as CategoryId, label: 'Casual Wear', icon: '👗' },
-        ].map((item) => {
-          const isSelected = selectedCategory === item.id;
-          return (
-            <button
-              key={item.id}
-              onClick={() => onSelectCategory(isSelected && item.id !== 'all' ? 'all' : item.id)}
-              className={`px-2.5 py-1 rounded-full text-xs font-bold shrink-0 transition flex items-center gap-1 border ${
-                isSelected
-                  ? 'bg-rose-600 text-white border-rose-600 shadow-2xs'
-                  : 'bg-white text-neutral-700 border-neutral-200 hover:border-rose-300 hover:text-rose-600'
-              }`}
-            >
-              <span>{item.icon}</span>
-              <span>{item.label}</span>
             </button>
           );
         })}

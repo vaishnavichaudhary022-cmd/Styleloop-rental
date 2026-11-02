@@ -29,23 +29,23 @@ export const CategoriesView: React.FC<CategoriesViewProps> = ({ onSelectCategory
         </div>
 
         {/* Tab Filter Switcher */}
-        <div className="flex items-center gap-1.5 p-1 bg-neutral-100 rounded-xl self-start sm:self-auto border border-neutral-200/70">
+        <div className="flex items-center gap-1 p-1 bg-stone-100 rounded-lg self-start sm:self-auto border border-stone-200">
           <button
             onClick={() => setFilterMode('all')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors cursor-pointer ${
               filterMode === 'all'
-                ? 'bg-white text-neutral-900 shadow-xs'
-                : 'text-neutral-600 hover:text-neutral-900'
+                ? 'bg-white text-stone-900 shadow-2xs font-semibold'
+                : 'text-stone-600 hover:text-stone-900'
             }`}
           >
             All ({CATEGORIES.length})
           </button>
           <button
             onClick={() => setFilterMode('festivals')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
+            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors flex items-center gap-1 cursor-pointer ${
               filterMode === 'festivals'
-                ? 'bg-gradient-to-r from-rose-600 to-purple-600 text-white shadow-xs'
-                : 'text-neutral-600 hover:text-neutral-900'
+                ? 'bg-stone-900 text-white shadow-2xs font-semibold'
+                : 'text-stone-600 hover:text-stone-900'
             }`}
           >
             <PartyPopper className="w-3.5 h-3.5" />
@@ -53,10 +53,10 @@ export const CategoriesView: React.FC<CategoriesViewProps> = ({ onSelectCategory
           </button>
           <button
             onClick={() => setFilterMode('occasions')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
+            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors flex items-center gap-1 cursor-pointer ${
               filterMode === 'occasions'
-                ? 'bg-neutral-900 text-white shadow-xs'
-                : 'text-neutral-600 hover:text-neutral-900'
+                ? 'bg-stone-900 text-white shadow-2xs font-semibold'
+                : 'text-stone-600 hover:text-stone-900'
             }`}
           >
             <Calendar className="w-3.5 h-3.5" />

@@ -393,11 +393,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                       value={couponCode}
                       onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                       placeholder="ENTER CODE"
-                      className="flex-1 bg-white border border-rose-200 rounded-xl px-3 py-2 text-xs font-mono font-bold uppercase focus:outline-none focus:border-rose-500"
+                      className="flex-1 bg-white border border-stone-300 rounded-lg px-3 py-2 text-xs font-mono font-medium uppercase focus:outline-none focus:border-stone-900"
                     />
                     <button
                       onClick={() => setCouponApplied(couponCode === 'RENT40')}
-                      className="px-4 py-2 bg-rose-600 text-white rounded-xl text-xs font-bold hover:bg-rose-700 transition"
+                      className="px-4 py-2 bg-stone-900 text-white rounded-lg text-xs font-medium hover:bg-stone-800 transition-colors cursor-pointer"
                     >
                       {couponApplied ? 'Applied' : 'Apply'}
                     </button>
@@ -1006,7 +1006,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                       onClose();
                       onViewRentalHistory();
                     }}
-                    className="w-full py-3.5 bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-700 hover:to-pink-700 text-white rounded-2xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-rose-500/25 transition active:scale-95"
+                    className="w-full py-3 bg-stone-900 hover:bg-stone-800 text-white rounded-lg text-xs font-medium uppercase tracking-wider flex items-center justify-center gap-2 shadow-xs transition cursor-pointer"
                   >
                     <Truck className="w-4 h-4" />
                     <span>Track Delivery Live in My Rentals</span>
@@ -1016,7 +1016,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="w-full py-2.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 rounded-2xl text-xs font-bold transition"
+                  className="w-full py-2.5 bg-stone-100 hover:bg-stone-200 text-stone-800 rounded-lg text-xs font-medium transition cursor-pointer"
                 >
                   Done & Return to Storefront
                 </button>
@@ -1027,21 +1027,21 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
         {/* ================= STEP ACTION FOOTERS ================= */}
         {cartItems.length > 0 && currentStep !== 'success' && (
-          <div className="p-4 border-t border-neutral-200 bg-white space-y-2">
+          <div className="p-4 border-t border-stone-200 bg-white space-y-2">
             
             {/* Step 1 CTA: Go to Delivery Address Selection */}
             {currentStep === 'cart' && (
               <>
                 <button
                   onClick={() => setCurrentStep('address')}
-                  className="w-full bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white py-3 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-md shadow-rose-500/25 transition active:scale-95"
+                  className="w-full bg-stone-900 hover:bg-stone-800 text-white py-3 rounded-lg text-xs font-medium uppercase tracking-wider flex items-center justify-center gap-2 shadow-xs transition active:scale-95 cursor-pointer"
                 >
                   <span>Select Delivery Address</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
-                <div className="flex items-center justify-between text-[10px] text-neutral-500 px-1">
-                  <span>Grand Total: <strong className="text-neutral-800 font-brand">₹{grandTotal.toLocaleString('en-IN')}</strong></span>
-                  <span>Refundable Deposit: <strong className="text-neutral-700">₹{securityDeposit.toLocaleString('en-IN')}</strong></span>
+                <div className="flex items-center justify-between text-[10px] text-stone-500 px-1">
+                  <span>Grand Total: <strong className="text-stone-900 font-sans">₹{grandTotal.toLocaleString('en-IN')}</strong></span>
+                  <span>Refundable Deposit: <strong className="text-stone-700">₹{securityDeposit.toLocaleString('en-IN')}</strong></span>
                 </div>
               </>
             )}
@@ -1057,13 +1057,13 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                     }
                     setCurrentStep('payment');
                   }}
-                  className="w-full bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white py-3.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-md shadow-rose-500/25 transition active:scale-95"
+                  className="w-full bg-stone-900 hover:bg-stone-800 text-white py-3 rounded-lg text-xs font-medium uppercase tracking-wider flex items-center justify-center gap-2 shadow-xs transition active:scale-95 cursor-pointer"
                 >
                   <span>Confirm & Reserve Delivery</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
-                <p className="text-[10px] text-center text-neutral-500">
-                  Delivering to: <strong className="text-neutral-800">{activeAddress ? `${activeAddress.street}, ${activeAddress.city}` : 'Choose address above'}</strong>
+                <p className="text-[10px] text-center text-stone-500">
+                  Delivering to: <strong className="text-stone-800">{activeAddress ? `${activeAddress.street}, ${activeAddress.city}` : 'Choose address above'}</strong>
                 </p>
               </>
             )}
@@ -1074,7 +1074,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 <button
                   onClick={handleCompletePayment}
                   disabled={isProcessingPayment}
-                  className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white py-3.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-md shadow-emerald-600/25 transition active:scale-95 disabled:opacity-75"
+                  className="w-full bg-stone-900 hover:bg-stone-800 text-white py-3.5 rounded-lg text-xs font-medium uppercase tracking-wider flex items-center justify-center gap-2 shadow-xs transition active:scale-95 disabled:opacity-75 cursor-pointer"
                 >
                   {isProcessingPayment ? (
                     <span className="flex items-center gap-2">
@@ -1083,13 +1083,13 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                     </span>
                   ) : (
                     <>
-                      <span>Pay ₹{grandTotal.toLocaleString('en-IN')} & Get Delivery</span>
+                      <span>Pay ₹{grandTotal.toLocaleString('en-IN')} & Confirm Booking</span>
                       <ArrowRight className="w-4 h-4" />
                     </>
                   )}
                 </button>
-                <div className="flex items-center justify-center gap-2 text-[10px] text-neutral-400">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+                <div className="flex items-center justify-center gap-2 text-[10px] text-stone-500">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
                   <span>100% Escrow Protected · Free Cancellation up to 48 hrs before rental date</span>
                 </div>
               </>
